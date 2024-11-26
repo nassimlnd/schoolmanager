@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\StudentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,31 @@ class Student
 
     #[ORM\Column(length: 255)]
     private ?string $profilePicture = null;
+
+    /**
+     * @var Collection<int, Course>
+     */
+    #[ORM\ManyToMany(targetEntity: Course::class, mappedBy: 'students')]
+    private Collection $courses;
+
+    /**
+     * @var Collection<int, Ratings>
+     */
+    #[ORM\OneToMany(targetEntity: Ratings::class, mappedBy: 'student', orphanRemoval: true)]
+    private Collection $ratings;
+
+    /**
+     * @var Collection<int, Absence>
+     */
+    #[ORM\OneToMany(targetEntity: Absence::class, mappedBy: 'student', orphanRemoval: true)]
+    private Collection $absences;
+
+    public function __construct()
+    {
+        $this->courses = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+        $this->absences = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,6 +132,93 @@ class Student
     public function setProfilePicture(string $profilePicture): static
     {
         $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getCourses(): Collection
+    {
+        return $this->courses;
+    }
+
+    public function addCourse(Course $course): static
+    {
+        if (!$this->courses->contains($course)) {
+            $this->courses->add($course);
+            $course->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCourse(Course $course): static
+    {
+        if ($this->courses->removeElement($course)) {
+            $course->removeStudent($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ratings>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Ratings $rating): static
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Ratings $rating): static
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getStudent() === $this) {
+                $rating->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Absence>
+     */
+    public function getAbsences(): Collection
+    {
+        return $this->absences;
+    }
+
+    public function addAbsence(Absence $absence): static
+    {
+        if (!$this->absences->contains($absence)) {
+            $this->absences->add($absence);
+            $absence->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAbsence(Absence $absence): static
+    {
+        if ($this->absences->removeElement($absence)) {
+            // set the owning side to null (unless already changed)
+            if ($absence->getStudent() === $this) {
+                $absence->setStudent(null);
+            }
+        }
 
         return $this;
     }
