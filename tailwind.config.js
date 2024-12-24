@@ -7,15 +7,29 @@ module.exports = {
     theme: {
         extend: {
             textColor: {
-                primary: '#101828',
-                secondary: '#344054',
-                tertiary: '#475467',
+                primary: "#101828",
+                secondary: "#344054",
+                tertiary: "#475467",
+                quarternary: "#667085",
+                button: {
+                    secondary: {
+                        fg: "#344054"
+                    }
+                },
+                nav: '#667085'
             },
             borderColor: {
-                primary: '#D0D5DD'
+                primary: "#D0D5DD",
+                secondary: "#E4E7EC",
+                button: {
+                    secondary: "#D0D5DD",
+                }
+            },
+            backgroundColor: {
+                secondary: "#F9FAFB"
             },
             placeholderColor: {
-                placeholder: '#667085'
+                DEFAULT: "#667085"
             }
         },
     },
