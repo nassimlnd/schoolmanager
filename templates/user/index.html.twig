@@ -72,7 +72,8 @@
                                     {{ user.email }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
-                                    {{ user.roles ? user.roles|json_encode : '' }}
+{#                                    {{ user.roles ? user.roles|json_encode : '' }}#}
+                                    <twig:RoleBadge :roles="user.roles" />
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
