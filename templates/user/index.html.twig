@@ -15,15 +15,21 @@
             </div>
 
             <div class="px-8 mt-8">
-                <label class="flex px-3.5 py-2.5 relative mb-6">
-                    <svg class="z-10 text-quarternary" width="24" height="24" viewbox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 21L17.5001 17.5M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
-                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <input type="text" name="search" placeholder="Search"
-                           class="absolute left-0 top-0 h-full w-full py-2.5 pl-11 border border-secondary rounded-lg custom-shadow-xs max-w-sm"/>
-                </label>
+                <div class="w-full flex justify-between pb-6">
+                    <label class="flex px-3.5 py-2.5 relative w-full max-w-sm">
+                        <svg class="z-10 text-quarternary" width="24" height="24" viewbox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 21L17.5001 17.5M20 11.5C20 16.1944 16.1944 20 11.5 20C6.80558 20 3 16.1944 3 11.5C3 6.80558 6.80558 3 11.5 3C16.1944 3 20 6.80558 20 11.5Z"
+                                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="text" name="search" placeholder="Search"
+                               class="absolute left-0 top-0 h-full w-full py-2.5 pl-11 border border-secondary rounded-lg custom-shadow-xs max-w-sm"/>
+                    </label>
+                    <button class="bg-orange-600 hover:bg-orange-700 transition-all ease-in-out duration-200 rounded-lg py-2.5 px-4 flex justify-center items-center gap-1.5 text-white font-semibold"
+                            type="submit">
+                        Add User
+                    </button>
+                </div>
                 <div class="relative overflow-x-auto sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
