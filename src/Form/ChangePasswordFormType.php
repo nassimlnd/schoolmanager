@@ -38,7 +38,7 @@ class ChangePasswordFormType extends AbstractType
                         new NotCompromisedPassword(),
                     ],
                     'attr' => [
-                        'class' => 'px-3.5 py-2.5 border border-primary rounded-lg custom-shadow-xs w-full focus:ring-orange-500 focus:outline-none focus:border-none',
+                        'class' => 'px-3.5 py-2.5 border border-primary rounded-lg custom-shadow-xs w-full',
                         'placeholder' => 'New password',
                     ],
                     'label' => 'New password',

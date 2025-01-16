@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 use GuzzleHttp\Client as HTTPClient;
@@ -41,7 +42,11 @@ class KordisClient
      */
     protected $accessToken;
 
-    public function __construct(string $clientId, string $login, string $password)
+    /**
+     * @throws GuzzleException
+     * @throws \Exception
+     */
+    public function __construct(string $login, string $password, string $clientId = 'skolae-app',)
     {
         $url = str_replace('{clientId}', $clientId, self::OAUTH_AUTHORIZE_URL);
 

@@ -17,7 +17,7 @@ class TestMyGESController extends AbstractController
     public function index(): Response
     {
         try {
-            $kordisClient = new KordisClient('skolae-app', 'nlounadi', '569841NL*');
+            $kordisClient = new KordisClient('nlounadi', '569841NL*');
         } catch (\Exception $e) {
             return $this->json(['error' => $e->getMessage()]);
         }

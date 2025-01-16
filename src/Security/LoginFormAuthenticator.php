@@ -21,8 +21,19 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
     public const LOGIN_ROUTE = 'app_login';
-    public function __construct(private UrlGeneratorInterface $urlGenerator, private EntityManagerInterface $entityManager)
+    private $urlGenerator;
+    private $entityManager;
+
+    public function __construct(UrlGeneratorInterface $urlGenerator, EntityManagerInterface $entityManager)
     {
+        $this->urlGenerator = $urlGenerator;
+        $this->entityManager = $entityManager;
+    }
+
+    public function supports(Request $request): bool
+    {
+        return self::LOGIN_ROUTE === $request->attributes->get('_route')
+            && $request->isMethod('POST');
     }
 
     public function authenticate(Request $request): Passport
@@ -43,9 +54,9 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-//        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-//            return new RedirectResponse($targetPath);
-//        }
+        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+            return new RedirectResponse($targetPath);
+        }
 
         if (in_array('ROLE_STUDENT', $token->getUser()->getRoles())) {
             $student = $token->getUser()->getStudent($this->entityManager);
