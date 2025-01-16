@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Student;
+use App\Enum\GenderEnum;
+use App\Enum\LevelEnum;
 use App\Form\MyGESLoginType;
 use App\Services\KordisClient;
 use App\Services\MyGES;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -101,7 +104,15 @@ class OnboardingController extends AbstractController
                 ]);
             }
 
-            $profile = json_encode($myGesClient->getProfile());
+            $classes = $myGesClient->getClasses(date('Y') - 1);
+            $promotion = $classes[0]->promotion;
+
+            $rawProfile = $myGesClient->getProfile();
+
+            $rawProfile->promotion = $promotion;
+
+            $profile = json_encode($rawProfile);
+
             $request->getSession()->set('myges_profile', $profile);
 
             return $this->redirectToRoute('app_onboarding_profile_review');
@@ -114,15 +125,55 @@ class OnboardingController extends AbstractController
     }
 
     #[Route('/onboarding/profile-review', name: 'app_onboarding_profile_review', methods: ['GET'])]
-    public function myGesProfileReview(Request $request)
+    public function myGesProfileReview(Request $request, EntityManagerInterface $entityManager)
     {
         $profile = json_decode($request->getSession()->get('myges_profile'), true);
+
+        $birthdayTimestamp = $profile['birthday'];
+        $birthdayTimestampSec = $birthdayTimestamp / 1000;
 
 //        dd($profile);
 
         $student = new Student();
+
+        $student->setStudentId($profile['student_id']);
         $student->setFirstName($profile['firstname']);
         $student->setLastName($profile['name']);
+        $student->setIne($profile['ine']);
+        $student->setDateOfBirth((new DateTime())->setTimestamp($birthdayTimestampSec));
+        $student->setEmail($profile['email']);
+        $student->setPhoneNumber($profile['telephone']);
+        $student->setAddress($profile['address1']);
+        $student->setZipCode($profile['zipcode']);
+        $student->setCity($profile['city']);
+        $student->setCountry($profile['country']);
+        $student->setBirthplace($profile['birthplace']);
+        $student->setBirthCountry($profile['birth_country']);
+        $student->setPersonalEmail($profile['personal_mail']);
+        $student->setNationality($profile['nationality']);
+
+        if (str_starts_with($profile['promotion'], '1')) {
+            $student->setLevel(LevelEnum::L1);
+        } else if (str_starts_with($profile['promotion'], '2')) {
+            $student->setLevel(LevelEnum::L2);
+        } else if (str_starts_with($profile['promotion'], '3')) {
+            $student->setLevel(LevelEnum::L3);
+        } else if (str_starts_with($profile['promotion'], '4')) {
+            $student->setLevel(LevelEnum::M1);
+        } else if (str_starts_with($profile['promotion'], '5')) {
+            $student->setLevel(LevelEnum::M2);
+        }
+
+        if ($profile['civility'] == 'M.') {
+            $student->setGender(GenderEnum::MALE);
+        } else {
+            $student->setGender(GenderEnum::FEMALE);
+        }
+
+        $student->setRelatedUser($this->getUser());
+
+        $entityManager->persist($student);
+        $entityManager->flush();
 
         return $this->render('onboarding/profile_review.html.twig', [
             'student' => $student,

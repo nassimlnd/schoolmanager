@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client as HTTPClient;
+use GuzzleHttp\Exception\GuzzleException;
 
 class MyGES
 {
@@ -28,7 +29,8 @@ class MyGES
     /**
      * Get current profile
      *
-     * @return array
+     * @return object|null
+     * @throws GuzzleException
      */
     public function getProfile() : ?object
     {
@@ -49,7 +51,8 @@ class MyGES
      * Update current profile
      *
      * @param array $fields
-     * @return array
+     * @return array|null
+     * @throws GuzzleException
      */
     public function updateProfile(array $fields) : ?array
     {
@@ -76,10 +79,11 @@ class MyGES
     /**
      * Get agenda between two dates
      *
-     * @todo determine startAt and endedAt format
      * @param string $startAt
      * @param string $endedAt
-     * @return array
+     * @return array|null
+     * @throws GuzzleException
+     * @todo determine startAt and endedAt format
      */
     public function getAgenda(string $startAt, string $endedAt) : ?array
     {
@@ -103,7 +107,8 @@ class MyGES
      * Get news with pagination
      *
      * @param integer $page
-     * @return array
+     * @return array|null
+     * @throws GuzzleException
      */
     public function getNews(int $page = 0) : ?array
     {
@@ -119,15 +124,14 @@ class MyGES
             ]
         ]);
 
-        dd(json_decode($response->getBody())->result);
-
         return json_decode($response->getBody())->result;
     }
 
     /**
      * Get news banners
      *
-     * @return array
+     * @return array|null
+     * @throws GuzzleException
      */
     public function getNewsBanners() : ?array
     {
@@ -147,7 +151,8 @@ class MyGES
      * Get grades / year
      *
      * @param integer $year
-     * @return array
+     * @return array|null
+     * @throws GuzzleException
      */
     public function getGrades(int $year) : ?array
     {
@@ -168,7 +173,8 @@ class MyGES
      * Get absences / year
      *
      * @param integer $year
-     * @return void
+     * @return array|null
+     * @throws GuzzleException
      */
     public function getAbsences(int $year) : ?array
     {
@@ -189,9 +195,10 @@ class MyGES
      * Get classes / year
      *
      * @param integer $year
-     * @return void
+     * @return array
+     * @throws GuzzleException
      */
-    public function getClasses(int $year) : ?Object
+    public function getClasses(int $year): array
     {
         $url = $this->getUrl(self::GET_CLASSES_ENDPOINT);
         $url = str_replace('{year}', $year, $url);
@@ -210,7 +217,8 @@ class MyGES
      * Get student by studentId
      *
      * @param integer $studentId
-     * @return void
+     * @return ?Object
+     * @throws GuzzleException
      */
     public function getStudent(int $studentId) : ?Object
     {
@@ -231,9 +239,10 @@ class MyGES
      * Get students by classeId
      *
      * @param integer $classeId
-     * @return void
+     * @return array
+     * @throws GuzzleException
      */
-    public function getStudents(int $classeId) : ?Object
+    public function getStudents(int $classeId) : array
     {
         $url = $this->getUrl(self::GET_STUDENTS_ENDPOINT);
         $url = str_replace('{classeId}', $classeId, $url);
