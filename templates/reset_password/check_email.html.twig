@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Password Reset Email Sent{% endblock %}
+
+{% block body %}
+    <main class="h-full w-full">
+        <div class="flex flex-col items-center relative py-24">
+            <svg width="768" height="524" class="absolute -top-5 -z-10" viewBox="0 0 768 524" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <mask id="mask0_5023_373035" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="-244"
+                      width="768" height="768">
+                    <rect width="768" height="768" transform="translate(0 -244)"
+                          fill="url(#paint0_radial_5023_373035)"/>
+                </mask>
+                <g mask="url(#mask0_5023_373035)">
+                    <g clip-path="url(#clip0_5023_373035)">
+                        <g clip-path="url(#clip1_5023_373035)">
+                            <line x1="0.5" y1="-244" x2="0.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="48.5" y1="-244" x2="48.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="96.5" y1="-244" x2="96.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="144.5" y1="-244" x2="144.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="192.5" y1="-244" x2="192.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="240.5" y1="-244" x2="240.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="288.5" y1="-244" x2="288.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="336.5" y1="-244" x2="336.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="384.5" y1="-244" x2="384.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="432.5" y1="-244" x2="432.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="480.5" y1="-244" x2="480.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="528.5" y1="-244" x2="528.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="576.5" y1="-244" x2="576.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="624.5" y1="-244" x2="624.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="672.5" y1="-244" x2="672.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="720.5" y1="-244" x2="720.5" y2="524" stroke="#E4E7EC"/>
+                        </g>
+                        <rect x="0.5" y="-243.5" width="767" height="767" stroke="#E4E7EC"/>
+                        <g clip-path="url(#clip2_5023_373035)">
+                            <line y1="43.5" x2="768" y2="43.5" stroke="#E4E7EC"/>
+                            <line y1="91.5" x2="768" y2="91.5" stroke="#E4E7EC"/>
+                            <line y1="139.5" x2="768" y2="139.5" stroke="#E4E7EC"/>
+                            <line y1="187.5" x2="768" y2="187.5" stroke="#E4E7EC"/>
+                            <line y1="235.5" x2="768" y2="235.5" stroke="#E4E7EC"/>
+                            <line y1="283.5" x2="768" y2="283.5" stroke="#E4E7EC"/>
+                            <line y1="331.5" x2="768" y2="331.5" stroke="#E4E7EC"/>
+                            <line y1="379.5" x2="768" y2="379.5" stroke="#E4E7EC"/>
+                            <line y1="427.5" x2="768" y2="427.5" stroke="#E4E7EC"/>
+                            <line y1="475.5" x2="768" y2="475.5" stroke="#E4E7EC"/>
+                            <line y1="523.5" x2="768" y2="523.5" stroke="#E4E7EC"/>
+                        </g>
+                        <rect x="0.5" y="-243.5" width="767" height="767" stroke="#E4E7EC"/>
+                    </g>
+                </g>
+                <defs>
+                    <radialGradient id="paint0_radial_5023_373035" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                                    gradientTransform="translate(384 384) rotate(90) scale(384 384)">
+                        <stop/>
+                        <stop offset="1" stop-opacity="0"/>
+                    </radialGradient>
+                    <clipPath id="clip0_5023_373035">
+                        <rect width="768" height="768" fill="white" transform="translate(0 -244)"/>
+                    </clipPath>
+                    <clipPath id="clip1_5023_373035">
+                        <rect y="-244" width="768" height="768" fill="white"/>
+                    </clipPath>
+                    <clipPath id="clip2_5023_373035">
+                        <rect y="-244" width="768" height="768" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
+            <div class="bg-white custom-shadow-xs-skeuomorphic p-3.5 rounded-lg border border-secondary">
+                <svg class="text-primary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 7L10.1649 12.7154C10.8261 13.1783 11.1567 13.4097 11.5163 13.4993C11.8339 13.5785 12.1661 13.5785 12.4837 13.4993C12.8433 13.4097 13.1739 13.1783 13.8351 12.7154L22 7M6.8 20H17.2C18.8802 20 19.7202 20 20.362 19.673C20.9265 19.3854 21.3854 18.9265 21.673 18.362C22 17.7202 22 16.8802 22 15.2V8.8C22 7.11984 22 6.27976 21.673 5.63803C21.3854 5.07354 20.9265 4.6146 20.362 4.32698C19.7202 4 18.8802 4 17.2 4H6.8C5.11984 4 4.27976 4 3.63803 4.32698C3.07354 4.6146 2.6146 5.07354 2.32698 5.63803C2 6.27976 2 7.11984 2 8.8V15.2C2 16.8802 2 17.7202 2.32698 18.362C2.6146 18.9265 3.07354 19.3854 3.63803 19.673C4.27976 20 5.11984 20 6.8 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+
+            <div class="flex flex-col items-center gap-3 mt-6">
+                <h1 class="font-semibold text-primary text-3xl">Check your email</h1>
+                <p class="text-tertiary font-normal text-center">We sent a password reset link to <br><span class="font-medium"></span></p>
+            </div>
+
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+
+            <p class="text-sm text-tertiary font-normal mt-8">Didn’t receive the email? <a href="#" class="text-orange-700 font-semibold">Click to resend</a></p>
+        </div>
+    </main>
+
+    <p>
+        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    </p>
+    <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+{% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -142,5 +143,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isAdmin(): bool
     {
         return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    public function getStudent(EntityManagerInterface $entityManager)
+    {
+        $studentRepository = $entityManager->getRepository(Student::class);
+
+        if (in_array('ROLE_STUDENT', $this->getRoles())) {
+            return $studentRepository->findOneBy(['relatedUser' => $this]);
+        } else {
+            return null;
+        }
     }
 }

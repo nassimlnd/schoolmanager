@@ -25,8 +25,16 @@ class AppFixtures extends Fixture
         $user->setRoles(['ROLE_USER']);
         $user->setPassword('$2y$13$Udp3wFdmy5kQBA8gXx/MHO.bKmNpxbGWcZ/48P8J4Ro71LX0/M9jW'); // password
 
+        $studentUser = new User();
+        $studentUser->setFirstName('Jane');
+        $studentUser->setLastName('Doe');
+        $studentUser->setEmail('jane.doe@mail.com');
+        $studentUser->setRoles(['ROLE_STUDENT']);
+        $studentUser->setPassword('$2y$13$Udp3wFdmy5kQBA8gXx/MHO.bKmNpxbGWcZ/48P8J4Ro71LX0/M9jW'); // password
+
         $manager->persist($adminUser);
         $manager->persist($user);
+        $manager->persist($studentUser);
         $manager->flush();
     }
 }

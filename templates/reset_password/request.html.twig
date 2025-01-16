@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    <main class="h-full w-full">
+        <div class="flex flex-col items-center relative py-24">
+            <svg width="768" height="524" class="absolute -top-5 -z-10" viewBox="0 0 768 524" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <mask id="mask0_5023_373035" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="-244"
+                      width="768" height="768">
+                    <rect width="768" height="768" transform="translate(0 -244)"
+                          fill="url(#paint0_radial_5023_373035)"/>
+                </mask>
+                <g mask="url(#mask0_5023_373035)">
+                    <g clip-path="url(#clip0_5023_373035)">
+                        <g clip-path="url(#clip1_5023_373035)">
+                            <line x1="0.5" y1="-244" x2="0.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="48.5" y1="-244" x2="48.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="96.5" y1="-244" x2="96.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="144.5" y1="-244" x2="144.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="192.5" y1="-244" x2="192.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="240.5" y1="-244" x2="240.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="288.5" y1="-244" x2="288.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="336.5" y1="-244" x2="336.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="384.5" y1="-244" x2="384.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="432.5" y1="-244" x2="432.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="480.5" y1="-244" x2="480.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="528.5" y1="-244" x2="528.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="576.5" y1="-244" x2="576.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="624.5" y1="-244" x2="624.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="672.5" y1="-244" x2="672.5" y2="524" stroke="#E4E7EC"/>
+                            <line x1="720.5" y1="-244" x2="720.5" y2="524" stroke="#E4E7EC"/>
+                        </g>
+                        <rect x="0.5" y="-243.5" width="767" height="767" stroke="#E4E7EC"/>
+                        <g clip-path="url(#clip2_5023_373035)">
+                            <line y1="43.5" x2="768" y2="43.5" stroke="#E4E7EC"/>
+                            <line y1="91.5" x2="768" y2="91.5" stroke="#E4E7EC"/>
+                            <line y1="139.5" x2="768" y2="139.5" stroke="#E4E7EC"/>
+                            <line y1="187.5" x2="768" y2="187.5" stroke="#E4E7EC"/>
+                            <line y1="235.5" x2="768" y2="235.5" stroke="#E4E7EC"/>
+                            <line y1="283.5" x2="768" y2="283.5" stroke="#E4E7EC"/>
+                            <line y1="331.5" x2="768" y2="331.5" stroke="#E4E7EC"/>
+                            <line y1="379.5" x2="768" y2="379.5" stroke="#E4E7EC"/>
+                            <line y1="427.5" x2="768" y2="427.5" stroke="#E4E7EC"/>
+                            <line y1="475.5" x2="768" y2="475.5" stroke="#E4E7EC"/>
+                            <line y1="523.5" x2="768" y2="523.5" stroke="#E4E7EC"/>
+                        </g>
+                        <rect x="0.5" y="-243.5" width="767" height="767" stroke="#E4E7EC"/>
+                    </g>
+                </g>
+                <defs>
+                    <radialGradient id="paint0_radial_5023_373035" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                                    gradientTransform="translate(384 384) rotate(90) scale(384 384)">
+                        <stop/>
+                        <stop offset="1" stop-opacity="0"/>
+                    </radialGradient>
+                    <clipPath id="clip0_5023_373035">
+                        <rect width="768" height="768" fill="white" transform="translate(0 -244)"/>
+                    </clipPath>
+                    <clipPath id="clip1_5023_373035">
+                        <rect y="-244" width="768" height="768" fill="white"/>
+                    </clipPath>
+                    <clipPath id="clip2_5023_373035">
+                        <rect y="-244" width="768" height="768" fill="white"/>
+                    </clipPath>
+                </defs>
+            </svg>
+            <div class="bg-white custom-shadow-xs-skeuomorphic p-3.5 rounded-lg border border-secondary">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 8.99994C17 8.48812 16.8047 7.9763 16.4142 7.58579C16.0237 7.19526 15.5118 7 15 7M15 15C18.3137 15 21 12.3137 21 9C21 5.68629 18.3137 3 15 3C11.6863 3 9 5.68629 9 9C9 9.27368 9.01832 9.54308 9.05381 9.80704C9.11218 10.2412 9.14136 10.4583 9.12172 10.5956C9.10125 10.7387 9.0752 10.8157 9.00469 10.9419C8.937 11.063 8.81771 11.1823 8.57913 11.4209L3.46863 16.5314C3.29568 16.7043 3.2092 16.7908 3.14736 16.8917C3.09253 16.9812 3.05213 17.0787 3.02763 17.1808C3 17.2959 3 17.4182 3 17.6627V19.4C3 19.9601 3 20.2401 3.10899 20.454C3.20487 20.6422 3.35785 20.7951 3.54601 20.891C3.75992 21 4.03995 21 4.6 21H7V19H9V17H11L12.5791 15.4209C12.8177 15.1823 12.937 15.063 13.0581 14.9953C13.1843 14.9248 13.2613 14.8987 13.4044 14.8783C13.5417 14.8586 13.7588 14.8878 14.193 14.9462C14.4569 14.9817 14.7263 15 15 15Z"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+
+            <div class="flex flex-col items-center gap-3 mt-6">
+                <h1 class="font-semibold text-primary text-3xl">Forgot password?</h1>
+                <p class="text-tertiary font-normal">No worries, we’ll send you reset instructions.</p>
+            </div>
+
+            {% for flash_error in app.flashes('reset_password_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
+
+            <div class="mt-8 flex flex-col w-[360px]">
+                {{ form_start(requestForm) }}
+                <div class="flex flex-col gap-1.5 w-full">
+                    <label for="request_form_email" class="text-secondary text-sm font-medium">Email</label>
+                    {{ form_row(requestForm.email) }}
+                </div>
+
+                <button type="submit"
+                        class="w-full mt-6 px-4 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-semibold flex items-center justify-center gap-2 rounded-lg transition ease-in-out duration-200">
+                    Reset password
+                </button>
+
+                <a href="{{ path('app_login') }}" class="text-tertiary font-semibold text-sm mt-6 flex items-center gap-2 mx-auto w-fit hover:underline underline-offset-4 transition-all ease-in-out duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+                        <path d="M16.3332 9.99996H4.6665M4.6665 9.99996L10.4998 15.8333M4.6665 9.99996L10.4998 4.16663" stroke="#475467" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Back to login
+                </a>
+                {{ form_end(requestForm) }}
+            </div>
+        </div>
+    </main>
+{% endblock %}

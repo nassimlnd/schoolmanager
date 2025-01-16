@@ -38,6 +38,9 @@ class Student
     #[ORM\Column(enumType: ProgramEnum::class)]
     private ?ProgramEnum $program = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $myGesCredentialsToken = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -130,6 +133,18 @@ class Student
     public function setProgram(ProgramEnum $program): static
     {
         $this->program = $program;
+
+        return $this;
+    }
+
+    public function getMyGesCredentialsToken(): ?string
+    {
+        return $this->myGesCredentialsToken;
+    }
+
+    public function setMyGesCredentialsToken(string $myGesCredentialsToken): static
+    {
+        $this->myGesCredentialsToken = $myGesCredentialsToken;
 
         return $this;
     }

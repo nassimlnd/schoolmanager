@@ -72,7 +72,6 @@
                                     {{ user.email }}
                                 </td>
                                 <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
-{#                                    {{ user.roles ? user.roles|json_encode : '' }}#}
                                     <twig:RoleBadge :roles="user.roles" />
                                 </td>
                                 <td class="px-6 py-4">
