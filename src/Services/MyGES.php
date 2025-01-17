@@ -20,6 +20,13 @@ class MyGES
     const GET_CLASSES_ENDPOINT  = '/{year}/classes';
     const GET_STUDENTS_ENDPOINT = '/classes/{classeId}/students';
     const GET_STUDENT_ENDPOINT  = '/students/{studentId}';
+    const GET_TEACHERS_ENDPOINT = '/{year}/teachers';
+    const GET_TEACHER_ENDPOINT  = '/teachers/{teacherId}';
+    const GET_COURSES_ENDPOINT  = '/{year}/courses';
+    const GET_COURSE_ENDPOINT   = '/courses/{courseId}';
+    const GET_PROJECTS_ENDPOINT = '/{year}/projects';
+    const GET_PRACTICALS_ENDPOINT = '/{year}/practicals';
+    const GET_COURSE_DOCUMENT_ENDPOINT  = '/{courseId}/files';
 
     public function __construct(KordisClient $client)
     {
@@ -248,6 +255,87 @@ class MyGES
         $url = str_replace('{classeId}', $classeId, $url);
 
         $client = new HttpClient();
+        $response = $client->request('GET', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->client->getAccessToken(),
+            ]
+        ]);
+
+        return json_decode($response->getBody())->result;
+    }
+
+    /**
+     * Get teachers / year
+     *
+     * @param integer $year
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getTeachers(int $year): array
+    {
+        $url = $this->getUrl(self::GET_TEACHERS_ENDPOINT);
+        $url = str_replace('{year}', $year, $url);
+
+        $client = new HTTPClient();
+        $response = $client->request('GET', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->client->getAccessToken(),
+            ]
+        ]);
+
+        return json_decode($response->getBody())->result;
+    }
+
+    /**
+     * Get teacher by teacherId
+     *
+     * @param integer $teacherId
+     * @return ?Object
+     * @throws GuzzleException
+     */
+    public function getTeacher(int $teacherId) : ?Object
+    {
+        $url = $this->getUrl(self::GET_TEACHER_ENDPOINT);
+        $url = str_replace('{teacherId}', $teacherId, $url);
+
+        $client = new HTTPClient();
+        $response = $client->request('GET', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->client->getAccessToken(),
+            ]
+        ]);
+
+        return json_decode($response->getBody())->result;
+    }
+
+    /**
+     * Get courses / year
+     *
+     * @param integer $year
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getCourses(int $year): array
+    {
+        $url = $this->getUrl(self::GET_COURSES_ENDPOINT);
+        $url = str_replace('{year}', $year, $url);
+
+        $client = new HTTPClient();
+        $response = $client->request('GET', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->client->getAccessToken(),
+            ]
+        ]);
+
+        return json_decode($response->getBody())->result;
+    }
+
+    public function getCourseDocuments(int $courseId): array
+    {
+        $url = $this->getUrl(self::GET_COURSE_DOCUMENT_ENDPOINT);
+        $url = str_replace('{courseId}', $courseId, $url);
+
+        $client = new HTTPClient();
         $response = $client->request('GET', $url, [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->client->getAccessToken(),

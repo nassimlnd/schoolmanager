@@ -108,12 +108,13 @@ class OnboardingController extends AbstractController
             $promotion = $classes[0]->promotion;
 
             $rawProfile = $myGesClient->getProfile();
-
             $rawProfile->promotion = $promotion;
+            $rawProfile->credentialToken = $myGesClient->encodeCredentials($username, $password);
 
             $profile = json_encode($rawProfile);
 
             $request->getSession()->set('myges_profile', $profile);
+            $request->getSession()->set('onboarding_step', 3);
 
             return $this->redirectToRoute('app_onboarding_profile_review');
         }
@@ -124,15 +125,13 @@ class OnboardingController extends AbstractController
         ]);
     }
 
-    #[Route('/onboarding/profile-review', name: 'app_onboarding_profile_review', methods: ['GET'])]
+    #[Route('/onboarding/profile-review', name: 'app_onboarding_profile_review', methods: ['GET', 'POST'])]
     public function myGesProfileReview(Request $request, EntityManagerInterface $entityManager)
     {
         $profile = json_decode($request->getSession()->get('myges_profile'), true);
 
         $birthdayTimestamp = $profile['birthday'];
         $birthdayTimestampSec = $birthdayTimestamp / 1000;
-
-//        dd($profile);
 
         $student = new Student();
 
@@ -151,6 +150,8 @@ class OnboardingController extends AbstractController
         $student->setBirthCountry($profile['birth_country']);
         $student->setPersonalEmail($profile['personal_mail']);
         $student->setNationality($profile['nationality']);
+        $student->setMyGesCredentialsToken($profile['credentialToken']);
+        $student->setProfilePicture($profile['_links']['photo']['href']);
 
         if (str_starts_with($profile['promotion'], '1')) {
             $student->setLevel(LevelEnum::L1);
@@ -172,8 +173,16 @@ class OnboardingController extends AbstractController
 
         $student->setRelatedUser($this->getUser());
 
-        $entityManager->persist($student);
-        $entityManager->flush();
+        if ($request->isMethod('POST') && $request->get('valid')) {
+            $entityManager->persist($student);
+            $entityManager->flush();
+
+            $request->getSession()->remove('myges_profile');
+            $request->getSession()->remove('onboarding_step');
+            $request->getSession()->remove('onboarding_myges');
+
+            return $this->redirectToRoute('app_dashboard');
+        }
 
         return $this->render('onboarding/profile_review.html.twig', [
             'student' => $student,

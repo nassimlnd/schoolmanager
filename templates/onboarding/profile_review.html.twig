@@ -4,9 +4,67 @@
 
 {% block body %}
     <main class="flex w-full h-full">
-        <twig:OnboardingSidebar :step="3" />
-        <section class="flex-grow">
-            {{ student.firstname }}
+        <twig:OnboardingSidebar :step="3"/>
+        <section class="flex-grow h-full px-8">
+            <div class="py-8">
+                <h1 class="text-3xl font-semibold text-primary">Profile review</h1>
+                <p class="text-tertiary mt-2">Please review your profile information before proceeding</p>
+            </div>
+
+            <div class="rounded-xl border-2 border-secondary w-full relative overflow-hidden">
+                <div class="w-full h-56 bg-secondary absolute top-0"></div>
+                <div class="flex gap-6 w-full relative pt-48 px-8">
+                    <img src="{{ student.profilePicture }}"
+                         class="rounded-full h-40 w-40 object-cover aspect-square border-2 border-white custom-shadow-lg"
+                         alt="Profile picture"/>
+                    <div class="flex pt-16 gap-4 justify-between w-full">
+                        <div class="space-y-1">
+                            <h2 class="text-3xl text-primary font-semibold">{{ student.firstName ~ ' ' ~ student.lastName }}</h2>
+                            <p class="text-tertiary font-normal">{{ student.studentId }}</p>
+                        </div>
+                        <div>
+                            <button class="bg-white border-primary border custom-shadow-xs-skeuomorphic text-secondary font-semibold text-sm rounded-lg px-3.5 py-2.5">
+                                Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-12 px-8">
+                    <section>
+                        <h2 class="font-semibold text-primary text-lg">Student details</h2>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2 w-[400px]">
+                                <label for="address" class="text-tertiary font-medium text-sm">Address</label>
+                                <p class="font-medium text-secondary">{{ student.address }}</p>
+                            </div>
+                            <div class="flex flex-col gap-2 w-[400px]">
+                                <label for="zipCode" class="text-tertiary font-medium text-sm">Zip code</label>
+                                <p class="font-medium text-secondary">{{ student.zipCode }}</p>
+                            </div>
+                            <div class="flex flex-col gap-2 w-[400px]">
+                                <label for="city" class="text-tertiary font-medium text-sm">City</label>
+                                <p class="font-medium text-secondary">{{ student.city }}</p>
+                            </div>
+                            <div class="flex flex-col gap-2 w-[400px]">
+                                <label for="phoneNumber" class="text-tertiary font-medium text-sm">Phone number</label>
+                                <p class="font-medium text-secondary">{{ student.phoneNumber }}</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <form class="flex justify-between pt-6" method="post">
+                <p>
+                    By clicking on the proceed button, you agree to our <a href="#" class="text-orange-600">terms of
+                        service</a> and <a href="#" class="text-orange-600">privacy policy</a>
+                </p>
+                <input class="hidden" type="hidden" name="valid" value="true">
+                <button class="bg-orange-600 hover:bg-orange-700 transition-all ease-in-out duration-200 rounded-lg py-2.5 px-4 flex justify-center items-center gap-1.5 text-white font-semibold"
+                        type="submit">
+                    Proceed
+                </button>
+            </form>
         </section>
     </main>
 {% endblock %}

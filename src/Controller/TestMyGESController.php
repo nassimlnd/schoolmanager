@@ -28,7 +28,8 @@ class TestMyGESController extends AbstractController
             return $this->json(['error' => 'Access token is null']);
         }
 
-        $profile = $myGes->getProfile();
+//        $profile = $myGes->getCourses(2024);
+        $profile = $myGes->getCourseDocuments(296923);
 
         dd($profile);
 
