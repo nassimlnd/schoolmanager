@@ -1,0 +1,59 @@
+{% extends '/grades/index.html.twig' %}
+
+{% block course %}
+    <div class="flex justify-between">
+        <div>
+            <h2 class="text-primary font-semibold text-lg">{{ course.course }}</h2>
+            <p class="text-tertiary font-medium text-sm">{{ course.trimester_name }}</p>
+        </div>
+        <p class="text-tertiary font-normal">{{ course.teacher_civility ~ ' ' ~ course.teacher_first_name ~ ' ' ~ course.teacher_last_name }}</p>
+    </div>
+
+    <div class="flex justify-between">
+        <div class="flex gap-2.5 items-center w-1/2">
+            <p class="text-base text-tertiary font-medium">Coefficient</p>
+            <p class="font-medium">{{ course.coef }}</p>
+        </div>
+        <div class="flex gap-2.5 items-center w-1/2">
+            <p class="text-base text-tertiary font-medium">ECTS credits</p>
+            <p class="font-medium">{{ course.ects }}</p>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-secondary overflow-hidden">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3">ID</th>
+                <th scope="col" class="px-6 py-3">Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for grade in course.grades %}
+                <tr class="bg-white border-b hover:bg-gray-50">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {{ 'CC' ~ loop.index }}
+                    </th>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {{ grade }}
+                    </th>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="10" class="text-center py-3">no grades found</td>
+                </tr>
+            {% endfor %}
+            {% if course.exam %}
+                <tr class="bg-white hover:bg-gray-50">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        Exam
+                    </th>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {{ course.exam }}
+                    </th>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

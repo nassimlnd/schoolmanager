@@ -145,6 +145,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return in_array('ROLE_ADMIN', $this->getRoles());
     }
 
+    public function isStudent(): bool
+    {
+        return in_array('ROLE_STUDENT', $this->getRoles());
+    }
+
     public function getStudent(EntityManagerInterface $entityManager)
     {
         $studentRepository = $entityManager->getRepository(Student::class);

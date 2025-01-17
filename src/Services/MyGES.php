@@ -356,12 +356,12 @@ class MyGES
         return self::SERVICES_URL . '/me' . $endpoint;
     }
 
-    public function encodeCredentials($login, $password)
+    public static function encodeCredentials($login, $password)
     {
         return base64_encode($login . ':' . $password);
     }
 
-    public function decodeCredentials($credentials)
+    public static function decodeCredentials($credentials)
     {
         return base64_decode($credentials);
     }

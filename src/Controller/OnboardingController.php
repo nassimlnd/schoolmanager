@@ -109,7 +109,7 @@ class OnboardingController extends AbstractController
 
             $rawProfile = $myGesClient->getProfile();
             $rawProfile->promotion = $promotion;
-            $rawProfile->credentialToken = $myGesClient->encodeCredentials($username, $password);
+            $rawProfile->credentialToken = MyGES::encodeCredentials($username, $password);
 
             $profile = json_encode($rawProfile);
 
