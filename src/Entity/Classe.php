@@ -39,6 +39,9 @@ class Classe
     #[ORM\OneToMany(targetEntity: Student::class, mappedBy: 'classe')]
     private Collection $students;
 
+    #[ORM\Column(length: 255)]
+    private ?string $promotion = null;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
@@ -154,6 +157,18 @@ class Classe
                 $student->setClasse(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPromotion(): ?string
+    {
+        return $this->promotion;
+    }
+
+    public function setPromotion(string $promotion): static
+    {
+        $this->promotion = $promotion;
 
         return $this;
     }

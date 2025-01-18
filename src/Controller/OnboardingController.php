@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Classe;
 use App\Entity\Student;
 use App\Enum\GenderEnum;
 use App\Enum\LevelEnum;
 use App\Form\MyGESLoginType;
+use App\Repository\ClasseRepository;
+use App\Repository\StudentRepository;
 use App\Services\KordisClient;
 use App\Services\MyGES;
 use DateTime;
@@ -126,7 +129,7 @@ class OnboardingController extends AbstractController
     }
 
     #[Route('/onboarding/profile-review', name: 'app_onboarding_profile_review', methods: ['GET', 'POST'])]
-    public function myGesProfileReview(Request $request, EntityManagerInterface $entityManager)
+    public function myGesProfileReview(Request $request, EntityManagerInterface $entityManager, StudentRepository $studentRepository, ClasseRepository $classeRepository): Response
     {
         $profile = json_decode($request->getSession()->get('myges_profile'), true);
         $credentials = explode(':', MyGES::decodeCredentials($profile['credentialToken']));
@@ -135,6 +138,10 @@ class OnboardingController extends AbstractController
 
         $birthdayTimestamp = $profile['birthday'];
         $birthdayTimestampSec = $birthdayTimestamp / 1000;
+
+        if ($studentRepository->getByStudentId($profile['student_id'])) {
+            return $this->redirectToRoute('app_onboarding_myges', ['error' => 'Student already exists']);
+        }
 
         $student = new Student();
 
@@ -174,11 +181,27 @@ class OnboardingController extends AbstractController
             $student->setGender(GenderEnum::FEMALE);
         }
 
-        $classe = $myGesClient->getClasses(date('Y') - 1)[0];
+        $classeRaw = $myGesClient->getClasses(date('Y') - 1)[0];
+
+        if (!$classeRepository->getByPuid($classeRaw->puid)) {
+            $classe = new Classe();
+            $classe->setName($classeRaw->name);
+            $classe->setPromotion($classeRaw->promotion);
+            $classe->setDescription($classeRaw->description);
+            $classe->setYear($classeRaw->year);
+            $classe->setSchool($classeRaw->school);
+            $classe->setPuid($classeRaw->puid);
+            $classe->setTrimester($classeRaw->trimester);
+        } else {
+            $classe = $classeRepository->getByPuid($classeRaw->puid);
+        }
+
+        $classe->addStudent($student);
         $student->setRelatedUser($this->getUser());
 
         if ($request->isMethod('POST') && $request->get('valid')) {
             $entityManager->persist($student);
+            $entityManager->persist($classe);
             $entityManager->flush();
 
             $request->getSession()->remove('myges_profile');

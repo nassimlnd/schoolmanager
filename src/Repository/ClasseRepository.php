@@ -16,6 +16,16 @@ class ClasseRepository extends ServiceEntityRepository
         parent::__construct($registry, Classe::class);
     }
 
+    public function getByPuid($puid)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.puid = :puid')
+            ->setParameter('puid', $puid)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     //    /**
     //     * @return Classe[] Returns an array of Classe objects
     //     */
