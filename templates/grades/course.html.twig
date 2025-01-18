@@ -3,16 +3,16 @@
 {% block course %}
     <div class="flex justify-between">
         <div>
-            <h2 class="text-primary font-semibold text-lg">{{ course.course }}</h2>
-            <p class="text-tertiary font-medium text-sm">{{ course.trimester_name }}</p>
+            <h2 class="text-primary font-semibold text-lg">{{ course.name }}</h2>
+            <p class="text-tertiary font-medium text-sm">Semestre 1</p>
         </div>
-        <p class="text-tertiary font-normal">{{ course.teacher_civility ~ ' ' ~ course.teacher_first_name ~ ' ' ~ course.teacher_last_name }}</p>
+        <p class="text-tertiary font-normal">{{ course.teacher.civility ~ ' ' ~ course.teacher.firstName ~ ' ' ~ course.teacher.lastName }}</p>
     </div>
 
     <div class="flex justify-between">
         <div class="flex gap-2.5 items-center w-1/2">
             <p class="text-base text-tertiary font-medium">Coefficient</p>
-            <p class="font-medium">{{ course.coef }}</p>
+            <p class="font-medium">{{ course.coefficient }}</p>
         </div>
         <div class="flex gap-2.5 items-center w-1/2">
             <p class="text-base text-tertiary font-medium">ECTS credits</p>
@@ -29,13 +29,13 @@
             </tr>
             </thead>
             <tbody>
-            {% for grade in course.grades %}
+            {% for grade in grades %}
                 <tr class="bg-white border-b hover:bg-gray-50">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         {{ 'CC' ~ loop.index }}
                     </th>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        {{ grade }}
+                        {{ grade.grade }}
                     </th>
                 </tr>
             {% else %}
@@ -43,7 +43,7 @@
                     <td colspan="10" class="text-center py-3">no grades found</td>
                 </tr>
             {% endfor %}
-            {% if course.exam %}
+            {#{% if course.exam %}
                 <tr class="bg-white hover:bg-gray-50">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         Exam
@@ -52,7 +52,7 @@
                         {{ course.exam }}
                     </th>
                 </tr>
-            {% endif %}
+            {% endif %}#}
             </tbody>
         </table>
     </div>

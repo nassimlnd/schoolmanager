@@ -10,9 +10,10 @@
             <div class="flex items-center justify-between">
                 <h1 class="text-primary font-semibold text-3xl">Grades</h1>
                 <div class="flex gap-2 items-center">
-                    <button class="px-3.5 py-2.5 text-secondary font-semibold border border-primary rounded-lg custom-shadow-xs-skeuomorphic transition-all ease-in-out duration-200 hover:bg-secondary">
+                    <a href="{{ path('app_grades_sync') }}"
+                       class="group px-3.5 py-2.5 text-secondary font-semibold border border-primary rounded-lg custom-shadow-xs-skeuomorphic transition-all ease-in-out duration-200 hover:bg-secondary">
                         Sync with MyGES
-                    </button>
+                    </a>
                     <button class="bg-orange-600 hover:bg-orange-700 transition-all ease-in-out duration-200 rounded-lg py-2.5 px-4 flex justify-center items-center gap-1.5 text-white font-semibold">
                         Export
                     </button>
@@ -32,8 +33,8 @@
                         <a href="#" class="font-semibold text-orange-700 border-b-2 border-orange-700 px-1 pb-3">
                             All
                         </a>
-                        <a href="#" class="px-1 pb-3 font-semibold text-quarternary">Available</a>
-                        <a href="#" class="px-1 pb-3 font-semibold text-quarternary">Unavailable</a>
+                        <button disabled class="px-1 pb-3 font-semibold text-quarternary disabled:cursor-not-allowed">Available</button>
+                        <button disabled class="px-1 pb-3 font-semibold text-quarternary disabled:cursor-not-allowed">Unavailable</button>
                     </div>
                     <div class="rounded-lg border border-secondary overflow-hidden mr-2">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -45,17 +46,25 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for grade in grades %}
+                            {% for course in courses %}
                                 <tr class="bg-white border-b hover:bg-gray-50 cursor-pointer"
-                                    onclick="window.location.href = '/grades/' + {{ grade.rc_id }}">
+                                    onclick='window.location.href = "{{ path('app_grades_course', {rc_id: course.rcId}) }}"'>
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ grade.rc_id }}
+                                        {{ course.rcId }}
                                     </th>
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ grade.course }}
+                                        {{ course.name }}
                                     </th>
                                     <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
-                                        {{ grade.grades|length > 0 ? 'Available' : 'Unavailable' }}
+                                        {% if course.grades|length > 0 %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Available
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                Unavailable
+                                            </span>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             {% else %}

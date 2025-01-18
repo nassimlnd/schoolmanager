@@ -6,6 +6,8 @@ use App\Enum\GenderEnum;
 use App\Enum\LevelEnum;
 use App\Enum\ProgramEnum;
 use App\Repository\StudentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -80,6 +82,28 @@ class Student
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profilePicture = null;
+
+    /**
+     * @var Collection<int, Grade>
+     */
+    #[ORM\OneToMany(targetEntity: Grade::class, mappedBy: 'student', orphanRemoval: true)]
+    private Collection $grades;
+
+    /**
+     * @var Collection<int, Course>
+     */
+    #[ORM\ManyToMany(targetEntity: Course::class, inversedBy: 'students')]
+    private Collection $courses;
+
+    #[ORM\ManyToOne(inversedBy: 'students')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Classe $classe = null;
+
+    public function __construct()
+    {
+        $this->grades = new ArrayCollection();
+        $this->courses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -341,6 +365,72 @@ class Student
     public function setProfilePicture(?string $profilePicture): static
     {
         $this->profilePicture = $profilePicture;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Grade>
+     */
+    public function getGrades(): Collection
+    {
+        return $this->grades;
+    }
+
+    public function addGrade(Grade $grade): static
+    {
+        if (!$this->grades->contains($grade)) {
+            $this->grades->add($grade);
+            $grade->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGrade(Grade $grade): static
+    {
+        if ($this->grades->removeElement($grade)) {
+            // set the owning side to null (unless already changed)
+            if ($grade->getStudent() === $this) {
+                $grade->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getCourses(): Collection
+    {
+        return $this->courses;
+    }
+
+    public function addCourse(Course $course): static
+    {
+        if (!$this->courses->contains($course)) {
+            $this->courses->add($course);
+        }
+
+        return $this;
+    }
+
+    public function removeCourse(Course $course): static
+    {
+        $this->courses->removeElement($course);
+
+        return $this;
+    }
+
+    public function getClasse(): ?Classe
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(?Classe $classe): static
+    {
+        $this->classe = $classe;
 
         return $this;
     }

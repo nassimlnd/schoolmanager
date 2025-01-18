@@ -29,7 +29,9 @@ class TestMyGESController extends AbstractController
         }
 
 //        $profile = $myGes->getCourses(2024);
-        $profile = $myGes->getCourseDocuments(296923);
+        $profile = $myGes->getClasses(2024);
+//        $profile = $myGes->getStudents(1153);
+//        $profile = $myGes->getCourseDocuments(296923);
 
         dd($profile);
 

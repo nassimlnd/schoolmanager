@@ -129,6 +129,9 @@ class OnboardingController extends AbstractController
     public function myGesProfileReview(Request $request, EntityManagerInterface $entityManager)
     {
         $profile = json_decode($request->getSession()->get('myges_profile'), true);
+        $credentials = explode(':', MyGES::decodeCredentials($profile['credentialToken']));
+        $kordisClient = new KordisClient($credentials[0], $credentials[1]);
+        $myGesClient = new MyGES($kordisClient);
 
         $birthdayTimestamp = $profile['birthday'];
         $birthdayTimestampSec = $birthdayTimestamp / 1000;
@@ -171,6 +174,7 @@ class OnboardingController extends AbstractController
             $student->setGender(GenderEnum::FEMALE);
         }
 
+        $classe = $myGesClient->getClasses(date('Y') - 1)[0];
         $student->setRelatedUser($this->getUser());
 
         if ($request->isMethod('POST') && $request->get('valid')) {
@@ -186,6 +190,7 @@ class OnboardingController extends AbstractController
 
         return $this->render('onboarding/profile_review.html.twig', [
             'student' => $student,
+            'classe' => $classe,
         ]);
 
     }
