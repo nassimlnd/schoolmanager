@@ -86,4 +86,12 @@ class ProjectsController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_projects');
     }
+
+    #[Route('/projects/{id}', name: 'app_projects_show')]
+    public function show(Project $project): Response
+    {
+        return $this->render('projects/show.html.twig', [
+            'project' => $project
+        ]);
+    }
 }
