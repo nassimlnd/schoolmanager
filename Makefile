@@ -57,6 +57,9 @@ help:
 docker-compose.override.yaml: docker-compose.override.yaml.dist ## Create compose.override.yaml file
 	@cp $< $@
 
+build: ## Build the project
+	@docker compose build --no-cache
+
 up: install assets-install ## Start the project
 	@docker compose up -d --remove-orphans
 	@$(MAKE) --no-print-directory cache-clear
