@@ -65,6 +65,11 @@ up: install assets-install ## Start the project
 	@$(MAKE) --no-print-directory cache-clear
 	@$(MAKE) --no-print-directory assets-watch
 
+up-build: install assets-install
+	@docker compose up -d --build --remove-orphans
+	@$(MAKE) --no-print-directory cache-clear
+	@$(MAKE) --no-print-directory assets-build
+
 kill: ## Kill the project
 	@docker compose kill
 
