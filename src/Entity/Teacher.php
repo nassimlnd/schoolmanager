@@ -15,7 +15,7 @@ class Teacher
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $civility = null;
 
     #[ORM\Column(length: 255)]
@@ -30,9 +30,19 @@ class Teacher
     #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'teacher')]
     private Collection $courses;
 
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'teacher')]
+    private Collection $projects;
+
+    #[ORM\Column]
+    private ?int $teacherId = null;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,6 +119,48 @@ class Teacher
                 $course->setTeacher(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getTeacher() === $this) {
+                $project->setTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTeacherId(): ?int
+    {
+        return $this->teacherId;
+    }
+
+    public function setTeacherId(int $teacherId): static
+    {
+        $this->teacherId = $teacherId;
 
         return $this;
     }

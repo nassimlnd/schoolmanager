@@ -11,6 +11,7 @@ module.exports = {
                 secondary: "#344054",
                 tertiary: "#475467",
                 quarternary: "#667085",
+                senary: "#D0D5DD",
                 button: {
                     secondary: {
                         fg: "#344054"

@@ -28,6 +28,16 @@ class TeacherRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getByTeacherId($teacherId)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.teacherId = :teacherId')
+            ->setParameter('teacherId', $teacherId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     //    /**
     //     * @return Teacher[] Returns an array of Teacher objects
     //     */

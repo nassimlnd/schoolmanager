@@ -21,10 +21,10 @@ class Course
     #[ORM\Column]
     private ?int $rcId = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $coefficient = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $ects = null;
 
     /**
@@ -42,10 +42,17 @@ class Course
     #[ORM\ManyToMany(targetEntity: Student::class, mappedBy: 'courses')]
     private Collection $students;
 
+    /**
+     * @var Collection<int, Project>
+     */
+    #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'course', orphanRemoval: true)]
+    private Collection $projects;
+
     public function __construct()
     {
         $this->grades = new ArrayCollection();
         $this->students = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -172,6 +179,36 @@ class Course
     {
         if ($this->students->removeElement($student)) {
             $student->removeCourse($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
+    }
+
+    public function addProject(Project $project): static
+    {
+        if (!$this->projects->contains($project)) {
+            $this->projects->add($project);
+            $project->setCourse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProject(Project $project): static
+    {
+        if ($this->projects->removeElement($project)) {
+            // set the owning side to null (unless already changed)
+            if ($project->getCourse() === $this) {
+                $project->setCourse(null);
+            }
         }
 
         return $this;

@@ -16,6 +16,15 @@ class CourseRepository extends ServiceEntityRepository
         parent::__construct($registry, Course::class);
     }
 
+    public function getByRcId($rcId): ?Course
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.rcId = :rcId')
+            ->setParameter('rcId', $rcId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Course[] Returns an array of Course objects
     //     */

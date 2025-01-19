@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projects{% endblock %}
+
+{% block body %}
+    <main class="h-full w-full flex items-center">
+        <twig:Sidebar />
+
+        <section class="h-full flex-grow pt-8 px-8">
+            <div class="flex items-center gap-2">
+                <a href="#" class="rounded-md p-1 hover:bg-secondary">
+                    <svg class="h-5 w-5 text-quarternary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 17H16M11.0177 2.764L4.23539 8.03912C3.78202 8.39175 3.55534 8.56806 3.39203 8.78886C3.24737 8.98444 3.1396 9.20478 3.07403 9.43905C3 9.70352 3 9.9907 3 10.5651V17.8C3 18.9201 3 19.4801 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4801 21 18.9201 21 17.8V10.5651C21 9.9907 21 9.70352 20.926 9.43905C20.8604 9.20478 20.7526 8.98444 20.608 8.78886C20.4447 8.56806 20.218 8.39175 19.7646 8.03913L12.9823 2.764C12.631 2.49075 12.4553 2.35412 12.2613 2.3016C12.0902 2.25526 11.9098 2.25526 11.7387 2.3016C11.5447 2.35412 11.369 2.49075 11.0177 2.764Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <svg class="h-4 w-4 text-senary" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <a class="px-2 py-1 rounded-md hover:bg-secondary text-secondary font-semibold text-sm" href="{{ path('app_projects') }}">
+                    Projects
+                </a>
+            </div>
+            <div class="flex justify-between mt-5">
+                <div class="space-y-1">
+                    <h1 class="text-primary font-semibold text-3xl">Projects</h1>
+                    <p class="text-tertiary font-normal">
+                        Here you can manage your projects.
+                    </p>
+                </div>
+                <a href="{{ path('app_projects_sync') }}"
+                   class="h-fit px-3.5 py-2.5 text-secondary font-semibold border border-primary rounded-lg custom-shadow-xs-skeuomorphic transition-all ease-in-out duration-200 hover:bg-secondary">
+                    Sync with MyGES
+                </a>
+            </div>
+
+            <div class="w-full mt-6 flex gap-3 border-b border-secondary">
+                <a href="#" class="font-semibold text-orange-700 border-b-2 border-orange-700 px-1 pb-3">
+                    Overview
+                </a>
+                <a href="#" class="font-semibold text-quarternary px-1 pb-3">
+                    Current
+                </a>
+                <a href="#" class="font-semibold text-quarternary px-1 pb-3">
+                    Archived
+                </a>
+            </div>
+
+            <div class="mt-6 rounded-xl border border-secondary">
+                <div class="px-6 py-5 flex items-center gap-2">
+                    <h2 class="text-primary font-semibold text-lg">All projects</h2>
+                    <span class="py-0.5 px-1.5 rounded-md border border-primary text-xs font-medium text-secondary">{{ projects|length }} projects</span>
+                </div>
+                <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">Name</th>
+                            <th scope="col" class="px-6 py-3">Status</th>
+                            <th scope="col" class="px-6 py-3">Course</th>
+                            <th scope="col" class="px-6 py-3">Limit date</th>
+                            <th scope="col" class="px-6 py-3">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for project in projects %}
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ project.name }}
+                                </th>
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ project.isDraft ? 'Draft' : 'Published' }}
+                                </th>
+                                <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                    {{ project.course.name }}
+                                </td>
+                                <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
+                                    Limit date
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="10">
+                                    <div class="w-full flex items-center justify-center py-6">
+                                        <p>No projects found.</p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

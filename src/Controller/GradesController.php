@@ -62,10 +62,12 @@ class GradesController extends AbstractController
             $teacher = $teacherRepository->getByName($grade->teacher_first_name, $grade->teacher_last_name);
 
             if (!$teacher) {
+                $rawTeacher = $myGesClient->getTeacherByName($grade->teacher_first_name, $grade->teacher_last_name);
                 $teacher = new Teacher();
-                $teacher->setCivility($grade->teacher_civility);
-                $teacher->setFirstname($grade->teacher_first_name);
-                $teacher->setLastname($grade->teacher_last_name);
+                $teacher->setFirstName($rawTeacher->firstname);
+                $teacher->setLastName($rawTeacher->lastname);
+                $teacher->setTeacherId($rawTeacher->uid);
+
                 $entityManager->persist($teacher);
             }
 

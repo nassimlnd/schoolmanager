@@ -271,7 +271,7 @@ class MyGES
      * @return array
      * @throws GuzzleException
      */
-    public function getTeachers(int $year): array
+    public function getTeachers(int $year): ?array
     {
         $url = $this->getUrl(self::GET_TEACHERS_ENDPOINT);
         $url = str_replace('{year}', $year, $url);
@@ -330,6 +330,13 @@ class MyGES
         return json_decode($response->getBody())->result;
     }
 
+    /**
+     * Get courses documents
+     *
+     * @param int $courseId
+     * @return array
+     * @throws GuzzleException
+     */
     public function getCourseDocuments(int $courseId): array
     {
         $url = $this->getUrl(self::GET_COURSE_DOCUMENT_ENDPOINT);
@@ -343,6 +350,49 @@ class MyGES
         ]);
 
         return json_decode($response->getBody())->result;
+    }
+
+    /**
+     * Get projects / year
+     *
+     * @param integer $year
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getProjects(int $year): array
+    {
+        $url = $this->getUrl(self::GET_PROJECTS_ENDPOINT);
+        $url = str_replace('{year}', $year, $url);
+
+        $client = new HTTPClient();
+        $response = $client->request('GET', $url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->client->getAccessToken(),
+            ]
+        ]);
+
+        return json_decode($response->getBody())->result;
+    }
+
+    /**
+     * Get teacher by name
+     *
+     * @param string $firstName
+     * @param string $lastName
+     * @return Object|null
+     * @throws GuzzleException
+     */
+    public function getTeacherByName(string $firstName, string $lastName): ?Object
+    {
+        $teachers = $this->getTeachers(date('Y') - 1);
+
+        foreach ($teachers as $teacher) {
+            if ($teacher->firstname === $firstName && $teacher->lastname === $lastName) {
+                return $teacher;
+            }
+        }
+
+        return null;
     }
 
     /**
