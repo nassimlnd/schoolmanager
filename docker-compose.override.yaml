@@ -2,9 +2,9 @@ services:
 #  php:
 #    user: "${uid}:${gid}"
 
-#  db:
-#    ports:
-#      - "5432:5432"
+  db:
+    ports:
+      - "5432:5432"
 
   web:
     ports:
