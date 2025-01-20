@@ -108,6 +108,9 @@ fixtures: update-db ## Load fixtures
 assets-install: ## Install assets
 	@$(dn) npm install
 
+assets-encore: ## Run encore
+	@$(dn) npm run watch
+
 assets-watch: ## Build assets in dev mode
 	@$(dn) npm run dev-server
 
