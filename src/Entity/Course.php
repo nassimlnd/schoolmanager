@@ -213,4 +213,15 @@ class Course
 
         return $this;
     }
+
+    public function hasGrades($userId): bool
+    {
+        foreach ($this->grades as $grade) {
+            if ($grade->getStudent()->getRelatedUser()->getId() === $userId && sizeof($grade->getGrades()) > 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
