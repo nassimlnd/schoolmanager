@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\GradeRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GradeRepository::class)]
@@ -12,9 +13,6 @@ class Grade
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?float $grade = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $letterMark = null;
@@ -42,6 +40,9 @@ class Grade
     #[ORM\JoinColumn(nullable: false)]
     private ?Student $student = null;
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private ?array $grades = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -50,18 +51,6 @@ class Grade
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getGrade(): ?float
-    {
-        return $this->grade;
-    }
-
-    public function setGrade(?float $grade): static
-    {
-        $this->grade = $grade;
 
         return $this;
     }
@@ -158,6 +147,18 @@ class Grade
     public function setStudent(?Student $student): static
     {
         $this->student = $student;
+
+        return $this;
+    }
+
+    public function getGrades(): ?array
+    {
+        return $this->grades;
+    }
+
+    public function setGrades(?array $grades): static
+    {
+        $this->grades = $grades;
 
         return $this;
     }

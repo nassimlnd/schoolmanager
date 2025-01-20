@@ -26,7 +26,7 @@ class GradeRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getGradesByStudentAndCourse($courseId, $studentId)
+    public function getGradesByStudentAndCourse($courseId, $studentId): ?Grade
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.course = :courseId')
@@ -34,7 +34,7 @@ class GradeRepository extends ServiceEntityRepository
             ->setParameter('courseId', $courseId)
             ->setParameter('studentId', $studentId)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Classe;
 use App\Entity\Course;
+use App\Entity\Grade;
 use App\Entity\Project;
 use App\Entity\ProjectGroup;
 use App\Entity\ProjectLog;
@@ -11,6 +12,7 @@ use App\Entity\Student;
 use App\Entity\Teacher;
 use App\Repository\ClasseRepository;
 use App\Repository\CourseRepository;
+use App\Repository\GradeRepository;
 use App\Repository\ProjectGroupRepository;
 use App\Repository\ProjectLogRepository;
 use App\Repository\ProjectRepository;
@@ -23,24 +25,30 @@ use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class MyGESController extends AbstractController
 {
     #[Route('/myges/sync', name: 'app_myges_sync')]
-    public function index(EntityManagerInterface $entityManager, CourseRepository $courseRepository, StudentRepository $studentRepository, TeacherRepository $teacherRepository, ClasseRepository $classeRepository, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, CourseRepository $courseRepository, StudentRepository $studentRepository, TeacherRepository $teacherRepository, ClasseRepository $classeRepository, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository, GradeRepository $gradeRepository): Response
     {
         $student = $this->getUser()->getStudent($entityManager);
         $credentials = explode(':', MyGES::decodeCredentials($student->getMyGesCredentialsToken()));
         $myGES = new MyGES(new KordisClient($credentials[0], $credentials[1]));
 
-        $this->syncTeachers($myGES, $teacherRepository, $entityManager);
-        $this->syncCourses($myGES, $courseRepository, $entityManager, $teacherRepository);
-        $this->syncStudents($myGES, $studentRepository, $entityManager, $classeRepository);
-        $this->syncProjects($myGES, $projectRepository, $groupRepository, $projectLogRepository, $studentRepository, $courseRepository, $teacherRepository, $entityManager);
+        try {
+            $this->syncTeachers($myGES, $teacherRepository, $entityManager);
+            $this->syncCourses($myGES, $courseRepository, $entityManager, $teacherRepository);
+            $this->syncStudents($myGES, $studentRepository, $entityManager, $classeRepository);
+            $this->syncProjects($myGES, $projectRepository, $groupRepository, $projectLogRepository, $studentRepository, $courseRepository, $teacherRepository, $entityManager);
+            $this->syncGrades($myGES, $entityManager, $gradeRepository, $courseRepository);
+        } catch (GuzzleException $e) {
+            return $this->redirectToRoute($request->get('redirect'));
+        }
 
-        return new JsonResponse(['status' => 'ok']);
+        return $this->redirectToRoute($request->get('redirect'));
     }
 
     /**
@@ -66,6 +74,7 @@ class MyGESController extends AbstractController
                 $course->setTeacher($teacherRepository->getByTeacherId($cours->teacher_id));
             }
 
+            $course->addStudent($this->getUser()->getStudent($entityManager));
             $entityManager->persist($course);
         }
 
@@ -97,6 +106,9 @@ class MyGESController extends AbstractController
         $entityManager->flush();
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function syncStudents(MyGES $myGES, StudentRepository $studentRepository, EntityManagerInterface $entityManager, ClasseRepository $classeRepository): void
     {
         $classe = $myGES->getClasses(date('Y') - 1)[0];
@@ -137,6 +149,9 @@ class MyGESController extends AbstractController
         $entityManager->flush();
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function syncProjects(MyGES $myGES, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository, StudentRepository $studentRepository, CourseRepository $courseRepository, TeacherRepository $teacherRepository, EntityManagerInterface $entityManager): void
     {
         $projects = $myGES->getProjects(date('Y') - 1);
@@ -226,7 +241,47 @@ class MyGESController extends AbstractController
                 }
             }
 
+            $this->getUser()->getStudent($entityManager)->addProject($project);
+
             $entityManager->persist($project);
+        }
+
+        $entityManager->flush();
+    }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function syncGrades(MyGES $myGES, EntityManagerInterface $entityManager, GradeRepository $gradeRepository, CourseRepository $courseRepository)
+    {
+        $grades = $myGES->getGrades(date('Y') - 1);
+
+        foreach ($grades as $rawGrade) {
+            if (!$courseRepository->getByRcId($rawGrade->rc_id)) {
+                continue;
+            }
+
+            if ($gradeRepository->getGradesByStudentAndCourse($courseRepository->getByRcId($rawGrade->rc_id)->getId(), $this->getUser()->getStudent($entityManager)->getId())) {
+                $grade = $gradeRepository->getGradesByStudentAndCourse($rawGrade->rc_id, $this->getUser()->getStudent($entityManager)->getId());
+
+                continue;
+            }
+
+            $grade = new Grade();
+            $course = $courseRepository->getByRcId($rawGrade->rc_id);
+
+            $grade->setStudent($this->getUser()->getStudent($entityManager));
+            $grade->setCourse($course);
+            $course->addGrade($grade);
+            $grade->setTrimester($rawGrade->trimester);
+            $grade->setTrimesterName($rawGrade->trimester_name);
+            $grade->setYear($rawGrade->year);
+            $grade->setLetterMark($rawGrade->letter_mark);
+            $grade->setGrades($rawGrade->grades);
+            $grade->setLates($rawGrade->lates);
+            $grade->setAbsences($rawGrade->absences);
+
+            $entityManager->persist($grade);
         }
 
         $entityManager->flush();
