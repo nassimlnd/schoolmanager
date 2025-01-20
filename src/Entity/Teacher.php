@@ -39,6 +39,9 @@ class Teacher
     #[ORM\Column]
     private ?int $teacherId = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -161,6 +164,18 @@ class Teacher
     public function setTeacherId(int $teacherId): static
     {
         $this->teacherId = $teacherId;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
 
         return $this;
     }

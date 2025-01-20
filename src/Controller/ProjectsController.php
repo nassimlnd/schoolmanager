@@ -4,14 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Course;
 use App\Entity\Project;
+use App\Entity\ProjectGroup;
+use App\Entity\ProjectLog;
 use App\Entity\Teacher;
 use App\Repository\CourseRepository;
+use App\Repository\ProjectGroupRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\TeacherRepository;
 use App\Services\KordisClient;
 use App\Services\MyGES;
 use App\Utils\DateTimeUtils;
 use Doctrine\ORM\EntityManagerInterface;
+use Monolog\DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -31,7 +35,7 @@ class ProjectsController extends AbstractController
     }
 
     #[Route('/projects/sync', name: 'app_projects_sync')]
-    public function sync(EntityManagerInterface $entityManager, CourseRepository $courseRepository, TeacherRepository $teacherRepository, ProjectRepository $projectRepository): Response
+    public function sync(EntityManagerInterface $entityManager, CourseRepository $courseRepository, TeacherRepository $teacherRepository, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository): Response
     {
         $student = $this->getUser()->getStudent($entityManager);
         if ($student->getMyGesCredentialsToken() == null) {
@@ -68,6 +72,46 @@ class ProjectsController extends AbstractController
                 $project->setCourse($course);
             }
 
+            foreach ($rawProject->groups as $rawGroup)
+            {
+                if ($groupRepository->getByGroupId($rawGroup->project_group_id)) {
+                    $group = $groupRepository->getByGroupId($rawGroup->project_group_id);
+                    $group->addStudent($student);
+                    $project->addProjectGroup($group);
+                    continue;
+                }
+
+                $isGoodGroup = false;
+                foreach ($rawGroup->project_group_students as $groupStudent) {
+                    if ($groupStudent->firstname == $student->getFirstName() && $groupStudent->lastname == $student->getLastName()) {
+                        $isGoodGroup = true;
+                        break;
+                    }
+                }
+
+                if ($isGoodGroup) {
+                    $group = new ProjectGroup();
+                    $group->setProject($project);
+                    $group->addStudent($student);
+                    $group->setName($rawGroup->group_name);
+                    $group->setGroupId($rawGroup->project_group_id);
+
+                    $project->addProjectGroup($group);
+                    break;
+                }
+            }
+
+            foreach ($rawProject->project_group_logs as $rawGroupLog)
+            {
+                $projectLog = new ProjectLog();
+                $projectLog->setProject($project);
+                $projectLog->setCreatedAt((new DateTimeImmutable())->setTimestamp(DateTimeUtils::timestampMsToSec($rawGroupLog->pgl_date)));
+                $projectLog->setDescription($rawGroupLog->pgl_describe);
+                $projectLog->setProjectGroup($groupRepository->getByGroupId($rawGroupLog->project_group_id));
+                $projectLog->setActionType($rawGroupLog->pgl_type_action);
+                $projectLog->setStudent($student);
+            }
+
             if ($teacherRepository->getByTeacherId($rawProject->teacher_id)) {
                 $teacher = $teacherRepository->getByTeacherId($rawProject->teacher_id);
             } else {
@@ -87,10 +131,18 @@ class ProjectsController extends AbstractController
         return $this->redirectToRoute('app_projects');
     }
 
-    #[Route('/projects/{id}', name: 'app_projects_show')]
-    public function show(Project $project): Response
+    #[Route('/projects/{id}/overview', name: 'app_projects_overview')]
+    public function overview(Project $project): Response
     {
-        return $this->render('projects/show.html.twig', [
+        return $this->render('projects/overview.html.twig', [
+            'project' => $project
+        ]);
+    }
+
+    #[Route('/projects/{id}/groups', name: 'app_projects_groups')]
+    public function groups(Project $project)
+    {
+        return $this->render('projects/groups.html.twig', [
             'project' => $project
         ]);
     }

@@ -28,14 +28,14 @@ class Student
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateOfBirth = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $relatedUser = null;
 
-    #[ORM\Column(enumType: LevelEnum::class)]
+    #[ORM\Column(nullable: true, enumType: LevelEnum::class)]
     private ?LevelEnum $level = null;
 
     #[ORM\Column(nullable: true, enumType: ProgramEnum::class)]
@@ -44,40 +44,40 @@ class Student
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $myGesCredentialsToken = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $ine = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $zipCode = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $country = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $personalEmail = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $birthplace = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $birthCountry = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nationality = null;
 
-    #[ORM\Column(enumType: GenderEnum::class)]
+    #[ORM\Column(nullable: true, enumType: GenderEnum::class)]
     private ?GenderEnum $gender = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -105,11 +105,25 @@ class Student
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'students')]
     private Collection $projects;
 
+    /**
+     * @var Collection<int, ProjectLog>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectLog::class, mappedBy: 'student', orphanRemoval: true)]
+    private Collection $projectLogs;
+
+    /**
+     * @var Collection<int, ProjectGroup>
+     */
+    #[ORM\ManyToMany(targetEntity: ProjectGroup::class, mappedBy: 'students')]
+    private Collection $projectGroups;
+
     public function __construct()
     {
         $this->grades = new ArrayCollection();
         $this->courses = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->projectLogs = new ArrayCollection();
+        $this->projectGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -464,6 +478,63 @@ class Student
     {
         if ($this->projects->removeElement($project)) {
             $project->removeStudent($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectLog>
+     */
+    public function getProjectLogs(): Collection
+    {
+        return $this->projectLogs;
+    }
+
+    public function addProjectLog(ProjectLog $projectLog): static
+    {
+        if (!$this->projectLogs->contains($projectLog)) {
+            $this->projectLogs->add($projectLog);
+            $projectLog->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectLog(ProjectLog $projectLog): static
+    {
+        if ($this->projectLogs->removeElement($projectLog)) {
+            // set the owning side to null (unless already changed)
+            if ($projectLog->getStudent() === $this) {
+                $projectLog->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectGroup>
+     */
+    public function getProjectGroups(): Collection
+    {
+        return $this->projectGroups;
+    }
+
+    public function addProjectGroup(ProjectGroup $projectGroup): static
+    {
+        if (!$this->projectGroups->contains($projectGroup)) {
+            $this->projectGroups->add($projectGroup);
+            $projectGroup->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectGroup(ProjectGroup $projectGroup): static
+    {
+        if ($this->projectGroups->removeElement($projectGroup)) {
+            $projectGroup->removeStudent($this);
         }
 
         return $this;

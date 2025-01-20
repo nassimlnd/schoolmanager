@@ -60,10 +60,24 @@ class Project
     #[ORM\ManyToMany(targetEntity: Student::class, inversedBy: 'projects')]
     private Collection $students;
 
+    /**
+     * @var Collection<int, ProjectLog>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectLog::class, mappedBy: 'project', orphanRemoval: true)]
+    private Collection $projectLogs;
+
+    /**
+     * @var Collection<int, ProjectGroup>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectGroup::class, mappedBy: 'project', orphanRemoval: true)]
+    private Collection $projectGroups;
+
     public function __construct()
     {
         $this->projectSteps = new ArrayCollection();
         $this->students = new ArrayCollection();
+        $this->projectLogs = new ArrayCollection();
+        $this->projectGroups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -248,6 +262,66 @@ class Project
     public function removeStudent(Student $student): static
     {
         $this->students->removeElement($student);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectLog>
+     */
+    public function getProjectLogs(): Collection
+    {
+        return $this->projectLogs;
+    }
+
+    public function addProjectLog(ProjectLog $projectLog): static
+    {
+        if (!$this->projectLogs->contains($projectLog)) {
+            $this->projectLogs->add($projectLog);
+            $projectLog->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectLog(ProjectLog $projectLog): static
+    {
+        if ($this->projectLogs->removeElement($projectLog)) {
+            // set the owning side to null (unless already changed)
+            if ($projectLog->getProject() === $this) {
+                $projectLog->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectGroup>
+     */
+    public function getProjectGroups(): Collection
+    {
+        return $this->projectGroups;
+    }
+
+    public function addProjectGroup(ProjectGroup $projectGroup): static
+    {
+        if (!$this->projectGroups->contains($projectGroup)) {
+            $this->projectGroups->add($projectGroup);
+            $projectGroup->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectGroup(ProjectGroup $projectGroup): static
+    {
+        if ($this->projectGroups->removeElement($projectGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($projectGroup->getProject() === $this) {
+                $projectGroup->setProject(null);
+            }
+        }
 
         return $this;
     }

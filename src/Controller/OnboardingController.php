@@ -145,7 +145,7 @@ class OnboardingController extends AbstractController
 
         $student = new Student();
 
-        $student->setStudentId($profile['student_id']);
+        $student->setStudentId(explode('-', $profile['student_id'])[2]);
         $student->setFirstName($profile['firstname']);
         $student->setLastName($profile['name']);
         $student->setIne($profile['ine']);
