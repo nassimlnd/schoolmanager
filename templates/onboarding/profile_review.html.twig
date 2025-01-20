@@ -5,7 +5,8 @@
 {% block body %}
     <main class="flex w-full h-full">
         <twig:OnboardingSidebar :step="3"/>
-        <section class="flex-grow h-full px-8">
+
+        <section class="flex-grow h-full px-8 ml-[512px]">
             <div class="py-8">
                 <h1 class="text-3xl font-semibold text-primary">Profile review</h1>
                 <p class="text-tertiary mt-2">Please review your profile information before proceeding</p>
@@ -72,7 +73,7 @@
                 </div>
             </div>
 
-            <form class="flex justify-between pt-6" method="post">
+            <form class="flex justify-between pt-6 pb-8" method="post">
                 <p>
                     By clicking on the proceed button, you agree to our <a href="#" class="text-orange-600">terms of
                         service</a> and <a href="#" class="text-orange-600">privacy policy</a>
