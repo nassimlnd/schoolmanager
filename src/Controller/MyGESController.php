@@ -141,6 +141,10 @@ class MyGESController extends AbstractController
             $student->setLastName($rawStudent->lastname);
             $student->setEmail($rawStudent->email);
             $student->setStudentId($rawStudent->uid);
+            $linksArray = array_filter($rawStudent->links, function ($link) {
+                return $link->rel === 'photo';
+            });
+            $student->setProfilePicture(array_pop($linksArray)->href);
             $student->setClasse($class);
 
             $entityManager->persist($student);
@@ -262,7 +266,8 @@ class MyGESController extends AbstractController
             }
 
             if ($gradeRepository->getGradesByStudentAndCourse($courseRepository->getByRcId($rawGrade->rc_id)->getId(), $this->getUser()->getStudent($entityManager)->getId())) {
-                $grade = $gradeRepository->getGradesByStudentAndCourse($rawGrade->rc_id, $this->getUser()->getStudent($entityManager)->getId());
+                $grade = $gradeRepository->getGradesByStudentAndCourse($courseRepository->getByRcId($rawGrade->rc_id)->getId(), $this->getUser()->getStudent($entityManager)->getId());
+                $grade->setGrades($rawGrade->grades);
 
                 continue;
             }

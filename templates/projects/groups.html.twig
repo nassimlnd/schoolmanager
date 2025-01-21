@@ -6,7 +6,26 @@
             <div class="flex">
                 <div class="space-y-1">
                     <h2 class="text-primary font-semibold text-lg">Project groups</h2>
-                    <p class="text-tertiary font-normal text-sm">A overview of the project, goals and outcomes.</p>
+                    <p class="text-tertiary font-normal text-sm">
+                        Here you can manage your project groups.
+                    </p>
+                </div>
+            </div>
+            <div>
+                <div class="flex flex-col mt-6">
+                    <div class="flex items-center gap-2">
+                        <div class="flex items -center justify-center h-12 w-12 rounded-full bg-secondary text-white">
+                            {{ group.name | first }}
+                        </div>
+                        <div class="space-y-px">
+                            <p class="text-primary font-semibold text-lg">{{ group.name }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        {% for student in group.students %}
+                            {{ student.firstName }} {{ student.lastName }}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </section>
