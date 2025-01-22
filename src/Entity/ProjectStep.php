@@ -30,6 +30,9 @@ class ProjectStep
     #[ORM\Column]
     private ?int $stepNumber = null;
 
+    #[ORM\Column]
+    private ?int $stepId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,6 +101,18 @@ class ProjectStep
     public function setStepNumber(int $stepNumber): static
     {
         $this->stepNumber = $stepNumber;
+
+        return $this;
+    }
+
+    public function getStepId(): ?int
+    {
+        return $this->stepId;
+    }
+
+    public function setStepId(int $stepId): static
+    {
+        $this->stepId = $stepId;
 
         return $this;
     }

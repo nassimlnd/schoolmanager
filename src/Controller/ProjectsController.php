@@ -45,12 +45,18 @@ class ProjectsController extends AbstractController
     #[Route('/projects/{id}/groups', name: 'app_projects_groups')]
     public function groups(Project $project, EntityManagerInterface $entityManager)
     {
-        $group = $project->getProjectGroups()->filter(function (ProjectGroup $group) use ($entityManager) {
-            return $group->getStudents()->contains($this->getUser()->getStudent($entityManager));
-        })->first();
+        $groups = $project->getProjectGroups();
 
         return $this->render('projects/groups.html.twig', [
-            'group' => $group,
+            'groups' => $groups,
+            'project' => $project
+        ]);
+    }
+
+    #[Route('/projects/{id}/files', name: 'app_projects_files')]
+    public function files(Project $project): Response
+    {
+        return $this->render('projects/files.html.twig', [
             'project' => $project
         ]);
     }

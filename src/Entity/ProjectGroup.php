@@ -37,10 +37,17 @@ class ProjectGroup
     #[ORM\OneToMany(targetEntity: ProjectLog::class, mappedBy: 'projectGroup', orphanRemoval: true)]
     private Collection $projectLogs;
 
+    /**
+     * @var Collection<int, ProjectGroupFile>
+     */
+    #[ORM\OneToMany(targetEntity: ProjectGroupFile::class, mappedBy: 'projectGroup', orphanRemoval: true)]
+    private Collection $projectGroupFiles;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
         $this->projectLogs = new ArrayCollection();
+        $this->projectGroupFiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +146,36 @@ class ProjectGroup
             // set the owning side to null (unless already changed)
             if ($projectLog->getProjectGroup() === $this) {
                 $projectLog->setProjectGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProjectGroupFile>
+     */
+    public function getProjectGroupFiles(): Collection
+    {
+        return $this->projectGroupFiles;
+    }
+
+    public function addProjectGroupFile(ProjectGroupFile $projectGroupFile): static
+    {
+        if (!$this->projectGroupFiles->contains($projectGroupFile)) {
+            $this->projectGroupFiles->add($projectGroupFile);
+            $projectGroupFile->setProjectGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProjectGroupFile(ProjectGroupFile $projectGroupFile): static
+    {
+        if ($this->projectGroupFiles->removeElement($projectGroupFile)) {
+            // set the owning side to null (unless already changed)
+            if ($projectGroupFile->getProjectGroup() === $this) {
+                $projectGroupFile->setProjectGroup(null);
             }
         }
 
