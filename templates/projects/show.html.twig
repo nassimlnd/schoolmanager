@@ -44,8 +44,8 @@
                 <a href="{{ path('app_projects_groups', { id: project.id }) }}" class="rounded-md px-3 py-2 flex gap-2 items-center justify-center {{ app.request.pathinfo == path('app_projects_groups', { id : project.id }) ? 'bg-white custom-shadow-sm' : '' }}">
                     <p class="{{ app.request.pathinfo == path('app_projects_groups', { id : project.id }) ? 'text-secondary font-semibold' : 'text-quarternary' }} text-sm">Groups</p>
                 </a>
-                <a href="#" class="rounded-md px-3 py-2 flex gap-2 items-center justify-center {{ app.request.pathinfo == path('app_projects_groups', { id : project.id }) ? 'bg-white custom-shadow-sm' : '' }}">
-                    <p class="{{ app.request.pathinfo == path('app_projects_groups', { id : project.id }) ? 'text-secondary font-semibold' : 'text-quarternary' }} text-sm">Files</p>
+                <a href="{{ path('app_projects_files', { id: project.id }) }}" class="rounded-md px-3 py-2 flex gap-2 items-center justify-center {{ app.request.pathinfo == path('app_projects_files', { id : project.id }) ? 'bg-white custom-shadow-sm' : '' }}">
+                    <p class="{{ app.request.pathinfo == path('app_projects_files', { id : project.id }) ? 'text-secondary font-semibold' : 'text-quarternary' }} text-sm">Files</p>
                 </a>
                 <div class="rounded-md px-3 py-2 flex gap-2 items-center justify-center">
                     <p class="text-quarternary text-sm">Messages</p>

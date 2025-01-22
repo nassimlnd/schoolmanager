@@ -2,31 +2,31 @@
 
 namespace App\Repository;
 
-use App\Entity\ProjectStep;
+use App\Entity\ProjectGroupFile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<ProjectStep>
+ * @extends ServiceEntityRepository<ProjectGroupFile>
  */
-class ProjectStepRepository extends ServiceEntityRepository
+class ProjectGroupFileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ProjectStep::class);
+        parent::__construct($registry, ProjectGroupFile::class);
     }
 
-    public function getByStepId($stepId): ?ProjectStep
+    public function getByFileId($fileId): ?ProjectGroupFile
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.stepId = :stepId')
-            ->setParameter('stepId', $stepId)
+            ->andWhere('p.fileId = :fileId')
+            ->setParameter('fileId', $fileId)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
     //    /**
-    //     * @return ProjectStep[] Returns an array of ProjectStep objects
+    //     * @return ProjectGroupFile[] Returns an array of ProjectGroupFile objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -40,7 +40,7 @@ class ProjectStepRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?ProjectStep
+    //    public function findOneBySomeField($value): ?ProjectGroupFile
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

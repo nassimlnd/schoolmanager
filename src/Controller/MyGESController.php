@@ -8,19 +8,24 @@ use App\Entity\Grade;
 use App\Entity\Project;
 use App\Entity\ProjectGroup;
 use App\Entity\ProjectLog;
+use App\Entity\ProjectStep;
 use App\Entity\Student;
 use App\Entity\Teacher;
 use App\Repository\ClasseRepository;
 use App\Repository\CourseRepository;
 use App\Repository\GradeRepository;
+use App\Repository\ProjectGroupFileRepository;
 use App\Repository\ProjectGroupRepository;
 use App\Repository\ProjectLogRepository;
 use App\Repository\ProjectRepository;
+use App\Repository\ProjectStepRepository;
 use App\Repository\StudentRepository;
 use App\Repository\TeacherRepository;
 use App\Services\KordisClient;
 use App\Services\MyGES;
 use App\Utils\DateTimeUtils;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class MyGESController extends AbstractController
 {
     #[Route('/myges/sync', name: 'app_myges_sync')]
-    public function index(Request $request, EntityManagerInterface $entityManager, CourseRepository $courseRepository, StudentRepository $studentRepository, TeacherRepository $teacherRepository, ClasseRepository $classeRepository, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository, GradeRepository $gradeRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, CourseRepository $courseRepository, StudentRepository $studentRepository, TeacherRepository $teacherRepository, ClasseRepository $classeRepository, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository, ProjectStepRepository $projectStepRepository, GradeRepository $gradeRepository): Response
     {
         $student = $this->getUser()->getStudent($entityManager);
         $credentials = explode(':', MyGES::decodeCredentials($student->getMyGesCredentialsToken()));
@@ -42,7 +47,7 @@ class MyGESController extends AbstractController
             $this->syncTeachers($myGES, $teacherRepository, $entityManager);
             $this->syncCourses($myGES, $courseRepository, $entityManager, $teacherRepository);
             $this->syncStudents($myGES, $studentRepository, $entityManager, $classeRepository);
-            $this->syncProjects($myGES, $projectRepository, $groupRepository, $projectLogRepository, $studentRepository, $courseRepository, $teacherRepository, $entityManager);
+            $this->syncProjects($myGES, $projectRepository, $groupRepository, $projectLogRepository, $studentRepository, $courseRepository, $teacherRepository, $entityManager, $projectStepRepository);
             $this->syncGrades($myGES, $entityManager, $gradeRepository, $courseRepository);
         } catch (GuzzleException $e) {
             return $this->redirectToRoute($request->get('redirect'));
@@ -156,7 +161,7 @@ class MyGESController extends AbstractController
     /**
      * @throws GuzzleException
      */
-    public function syncProjects(MyGES $myGES, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository, StudentRepository $studentRepository, CourseRepository $courseRepository, TeacherRepository $teacherRepository, EntityManagerInterface $entityManager): void
+    public function syncProjects(MyGES $myGES, ProjectRepository $projectRepository, ProjectGroupRepository $groupRepository, ProjectLogRepository $projectLogRepository, StudentRepository $studentRepository, CourseRepository $courseRepository, TeacherRepository $teacherRepository, EntityManagerInterface $entityManager, ProjectStepRepository $projectStepRepository, ProjectGroupFileRepository $fileRepository): void
     {
         $projects = $myGES->getProjects(date('Y') - 1);
 
@@ -189,9 +194,44 @@ class MyGESController extends AbstractController
 
             $project->setYear($rawProject->year);
             $project->setDraft($rawProject->is_draft);
-            $project->setCreatedAt((new \DateTimeImmutable())->setTimestamp(DateTimeUtils::timestampMsToSec($rawProject->project_create_date)));
+            $project->setCreatedAt((new DateTimeImmutable())->setTimestamp(DateTimeUtils::timestampMsToSec($rawProject->project_create_date)));
             $project->setUpdateUser($rawProject->update_user);
-            $project->setUpdateDate((new \DateTime())->setTimestamp(DateTimeUtils::timestampMsToSec($rawProject->update_date)));
+            $project->setUpdateDate((new DateTime())->setTimestamp(DateTimeUtils::timestampMsToSec($rawProject->update_date)));
+
+            if (!is_null($rawProject->steps)) {
+                foreach ($rawProject->steps as $rawStep) {
+                    if ($projectStepRepository->getByStepId($rawStep->psp_id)) {
+                        $step = $projectStepRepository->getByStepId($rawStep->psp_id);
+                        $step->setStepNumber($rawStep->psp_number);
+                        $step->setDescription($rawStep->psp_desc);
+                        $step->setLimitDate((new DateTime())->setTimestamp(DateTimeUtils::timestampMsToSec($rawStep->psp_limit_date)));
+                        $step->setType($rawStep->psp_type);
+                    } else {
+                        $step = new ProjectStep();
+                        $step->setType($rawStep->psp_type);
+                        $step->setDescription($rawStep->psp_desc);
+                        $step->setLimitDate((new DateTime())->setTimestamp(DateTimeUtils::timestampMsToSec($rawStep->psp_limit_date)));
+                        $step->setStepNumber($rawStep->psp_number);
+                        $step->setProject($project);
+                        $step->setStepId($rawStep->psp_id);
+                    }
+
+
+                    foreach ($rawStep->files as $rawFile) {
+                        if ($fileRepository->getByFileId($rawFile->psf_id)) {
+                            $file = $fileRepository->getByFileId($rawFile->psf_id);
+                            $file->setName($rawFile->psf_name);
+                            $file->setDescription($rawFile->psf_desc);
+                            $file->setUploadedAt((new DateTimeImmutable())->setTimestamp(DateTimeUtils::timestampMsToSec($rawFile->psf_end_upload)));
+                            $file->setSize($rawFile->psf_file_size);
+                            $file->setHash($rawFile->psf_file_hash);
+                            $file->setExtension($rawFile->psf_file_type);
+                            $file->setStep($step);
+                            $file->setProjectGroup($groupRepository->getByGroupId($rawFile->pgr_id));
+                        }
+                    }
+                }
+            }
 
             foreach ($rawProject->groups as $group) {
                 if ($groupRepository->getByGroupId($group->project_group_id)) {
@@ -235,7 +275,7 @@ class MyGESController extends AbstractController
                         return $entry->getGroupId() === $project_group_log->pgr_id;
                     })->first());
                     $projectLog->setProject($project);
-                    $projectLog->setCreatedAt((new \DateTimeImmutable())->setTimestamp(DateTimeUtils::timestampMsToSec($project_group_log->pgl_date)));
+                    $projectLog->setCreatedAt((new DateTimeImmutable())->setTimestamp(DateTimeUtils::timestampMsToSec($project_group_log->pgl_date)));
                     $projectLog->setActionType($project_group_log->pgl_type_action);
                     $projectLog->setDescription($project_group_log->pgl_describe);
 
