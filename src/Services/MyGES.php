@@ -27,6 +27,9 @@ class MyGES
     const GET_PROJECTS_ENDPOINT = '/{year}/projects';
     const GET_PRACTICALS_ENDPOINT = '/{year}/practicals';
     const GET_COURSE_DOCUMENT_ENDPOINT  = '/{courseId}/files';
+    const GET_PROJECT_FILE_ENDPOINT = '/projectStepFiles/{projectStepFileId}';
+    const GET_ANNUAL_DOCUMENTS_ENDPOINT = '/{year}/annualDocuments';
+    const GET_ANNUAL_DOCUMENT_ENDPOINT = '/annualDocuments/{annualDocumentId}';
 
     public function __construct(KordisClient $client)
     {
