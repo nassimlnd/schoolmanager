@@ -44,6 +44,14 @@ class ProjectsController extends AbstractController
         ]);
     }
 
+    #[Route('/projects/{id}/steps', name: 'app_projects_steps')]
+    public function steps(Project $project): Response
+    {
+        return $this->render('projects/steps.html.twig', [
+            'project' => $project
+        ]);
+    }
+
     #[Route('/projects/{id}/groups', name: 'app_projects_groups')]
     public function groups(Project $project, EntityManagerInterface $entityManager)
     {

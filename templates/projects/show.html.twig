@@ -41,6 +41,9 @@
                 <a href="{{ path('app_projects_overview', { id: project.id }) }}" class="rounded-md px-3 py-2 flex gap-2 items-center justify-center {{ app.request.pathinfo == path('app_projects_overview', { id : project.id }) ? 'bg-white custom-shadow-sm' : '' }}">
                     <p class="{{ app.request.pathinfo == path('app_projects_overview', { id : project.id }) ? 'text-secondary font-semibold' : 'text-quarternary' }} text-sm">Overview</p>
                 </a>
+                <a href="{{ path('app_projects_steps', { id: project.id }) }}" class="rounded-md px-3 py-2 flex gap-2 items-center justify-center {{ app.request.pathinfo == path('app_projects_steps', { id : project.id }) ? 'bg-white custom-shadow-sm' : '' }}">
+                    <p class="{{ app.request.pathinfo == path('app_projects_steps', { id : project.id }) ? 'text-secondary font-semibold' : 'text-quarternary' }} text-sm">Steps</p>
+                </a>
                 <a href="{{ path('app_projects_groups', { id: project.id }) }}" class="rounded-md px-3 py-2 flex gap-2 items-center justify-center {{ app.request.pathinfo == path('app_projects_groups', { id : project.id }) ? 'bg-white custom-shadow-sm' : '' }}">
                     <p class="{{ app.request.pathinfo == path('app_projects_groups', { id : project.id }) ? 'text-secondary font-semibold' : 'text-quarternary' }} text-sm">Groups</p>
                 </a>
