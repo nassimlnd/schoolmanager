@@ -14,6 +14,7 @@ use App\Repository\TeacherRepository;
 use App\Services\KordisClient;
 use App\Services\MyGES;
 use App\Utils\DateTimeUtils;
+use App\Utils\MarkdownUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Monolog\DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,6 +38,7 @@ class ProjectsController extends AbstractController
     #[Route('/projects/{id}/overview', name: 'app_projects_overview')]
     public function overview(Project $project): Response
     {
+        $project->setDescription(MarkdownUtils::markdownToHtml($project->getDescription()));
         return $this->render('projects/overview.html.twig', [
             'project' => $project
         ]);
@@ -57,7 +59,8 @@ class ProjectsController extends AbstractController
     public function files(Project $project): Response
     {
         return $this->render('projects/files.html.twig', [
-            'project' => $project
+            'project' => $project,
+            'files' => null
         ]);
     }
 }
