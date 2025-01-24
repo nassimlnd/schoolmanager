@@ -409,6 +409,15 @@ class MyGES
         return self::SERVICES_URL . '/me' . $endpoint;
     }
 
+    public static function getProjectFileURL(int $projectStepFileId): string
+    {
+        $url = self::SERVICES_URL . '/me' . self::GET_PROJECT_FILE_ENDPOINT;
+        $url = str_replace('{projectStepFileId}', $projectStepFileId, $url);
+
+
+        return $url;
+    }
+
     public static function encodeCredentials($login, $password)
     {
         return base64_encode($login . ':' . $password);

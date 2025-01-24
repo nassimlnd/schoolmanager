@@ -35,7 +35,7 @@
                 </div>
             </section>
 
-            <div class="mt-6 rounded-xl border border-secondary">
+            <div class="mt-6 rounded-xl border border-secondary overflow-hidden">
                 <div class="px-6 py-5 flex justify-between items-center gap-2">
                     <div class="flex flex-col gap-1">
                         <h2 class="text-primary font-semibold text-lg">Attached files</h2>
@@ -43,42 +43,34 @@
                     </div>
                     <span class="py-0.5 px-1.5 rounded-md border border-primary text-xs font-medium text-secondary">{{ files|length }} files</span>
                 </div>
-                <div class="relative overflow-x-auto">
+                <div class="relative overflow-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3">Name</th>
-                            <th scope="col" class="px-6 py-3">Status</th>
-                            <th scope="col" class="px-6 py-3">Course</th>
-                            <th scope="col" class="px-6 py-3">Limit date</th>
+                            <th scope="col" class="px-6 py-3">Extension</th>
+                            <th scope="col" class="px-6 py-3">Size</th>
+                            <th scope="col" class="px-6 py-3">Upload date</th>
                             <th scope="col" class="px-6 py-3">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for project in files %}
-                            <tr class="bg-white border-b hover:bg-gray-50 cursor-pointer" onclick="window.location.href = '{{ path('app_projects_overview', { id: project.id }) }}'">
+                        {% for file in files %}
+                            <tr class="bg-white {{ loop.index != files|length ? 'border-b' : ''}} hover:bg-gray-50">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    {{ project.name }}
+                                    {{ file.name }}
                                 </th>
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    {% if project.isDraft %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                Draft
-                                        </span>
-                                    {% else %}
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Published
-                                        </span>
-                                    {% endif %}
+                                    {{ file.extension }}
                                 </th>
                                 <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
-                                    {{ project.course.name }}
+                                    {{ file.size }} KB
                                 </td>
                                 <td class="px-6 py-4 text-gray-900 whitespace-nowrap">
-                                    Limit date
+                                    {{ file.uploadedAt|date }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#" class="font-medium text-blue-600 hover:underline">Edit</a>
+                                    <a href="{{ file.path }}" class="text-orange-700 font-semibold text-sm">Download</a>
                                 </td>
                             </tr>
                         {% else %}
