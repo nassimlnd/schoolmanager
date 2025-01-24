@@ -257,7 +257,7 @@ class MyGESController extends AbstractController
                                 $file->setExtension($rawFile->psf_file_type);
                                 $file->setStep($step);
                                 $file->setProjectGroup($groupRepository->getByGroupId($rawFile->pgr_id));
-                                $file->setPath('#');
+                                $file->setPath(MyGES::getProjectFileURL($rawFile->psf_id));
                                 $file->setFileId($rawFile->psf_id);
                             } else {
                                 $file = new ProjectGroupFile();
@@ -269,7 +269,7 @@ class MyGESController extends AbstractController
                                 $file->setExtension($rawFile->psf_file_type);
                                 $file->setStep($step);
                                 $file->setProjectGroup($groupRepository->getByGroupId($rawFile->pgr_id));
-                                $file->setPath('#');
+                                $file->setPath(MyGES::getProjectFileURL($rawFile->psf_id));
                                 $file->setFileId($rawFile->psf_id);
                             }
 

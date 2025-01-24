@@ -30,7 +30,7 @@
             </thead>
             <tbody>
             {% for grade in grades.grades %}
-                <tr class="bg-white border-b hover:bg-gray-50">
+                <tr class="bg-white {{ loop.index != grades.grades|length ? 'border-b' : ''}} hover:bg-gray-50">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         {{ 'CC' ~ loop.index }}
                     </th>
