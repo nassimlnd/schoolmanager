@@ -31,6 +31,9 @@ module.exports = {
             },
             placeholderColor: {
                 DEFAULT: "#667085"
+            },
+            height: {
+                '54': '13.5rem',
             }
         },
     },
