@@ -71,6 +71,7 @@ Encore
     //.autoProvidejQuery()
 
     .enablePostCssLoader()
+    .enableStimulusBridge('./assets/controllers.json')
 
     .configureDevServerOptions(options => {
         options.liveReload = true;

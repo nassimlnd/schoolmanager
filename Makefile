@@ -106,7 +106,7 @@ fixtures: update-db ## Load fixtures
 ##- Gestion des assets
 
 assets-install: ## Install assets
-	@$(dn) npm install
+	@$(dn) npm install -f
 
 assets-encore: ## Run encore
 	@$(dn) npm run watch

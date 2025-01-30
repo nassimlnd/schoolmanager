@@ -3,23 +3,22 @@
 namespace App\Twig;
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
-    public function getFunctions(): array
+    public function getFilters(): array
     {
         return [
-            new TwigFunction('leading_zeros', [$this, 'leadingZeros']),
+            new TwigFilter('leading_zeros', [$this, 'leadingZeros']),
         ];
     }
 
-    public function leadingZeros(int $number): string
+    public function leadingZeros($week, $increment = 0): string
     {
-        if ($number > 9) {
-            return (string) $number;
-        } else {
-            return str_pad($number, 2, '0', STR_PAD_LEFT);
-        }
+        $newWeek = (int)$week + $increment;
+        if ($newWeek > 52) $newWeek = 1;
+        if ($newWeek < 1) $newWeek = 52;
+        return sprintf("%02d", $newWeek);
     }
 }

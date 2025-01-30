@@ -32,11 +32,13 @@ module.exports = {
             placeholderColor: {
                 DEFAULT: "#667085"
             },
-            height: {
+            spacing: {
                 '54': '13.5rem',
             }
         },
     },
-    plugins: [],
+    plugins: [
+        require('tailwindcss-animated'),
+    ],
 }
 

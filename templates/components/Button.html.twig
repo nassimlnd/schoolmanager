@@ -1,0 +1,23 @@
+{#{% props label = 'Button', variant = 'primary', href = null, type = 'button' %}#}
+
+{% set buttonClasses = html_cva(
+    base: 'w-full transition-all ease-in-out duration-200 rounded-lg py-2.5 px-4 flex justify-center items-center gap-1.5 font-semibold',
+    variants: {
+        variant: {
+            primary: 'bg-orange-600 hover:bg-orange-700 text-white',
+            secondary: 'text-secondary border border-primary custom-shadow-xs-skeuomorphic hover:bg-secondary',
+        },
+    }
+) %}
+
+{% set classes = buttonClasses.apply({variant}) %}
+
+{% if href %}
+    <a href="{{ href }}" class="{{ classes }}">
+        {{ label }}
+    </a>
+{% else %}
+    <button type="{{ type }}" class="{{ classes }}">
+        {{ label }}
+    </button>
+{% endif %}
